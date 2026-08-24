@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<!-- saved from url=(0131)file:///C:/Users/Basavaraj.UB/OneDrive%20-%20Senvion%20Wind%20Technology%20Pvt%20Ltd/Desktop/Trail/Final/Team%20Task%20Tracker.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Team Task Tracker</title>
+<style>
+:root{
+  --ink:#101820; --ink-2:#39454f; --muted:#6c7885;
+  --canvas:#e8ecf0; --surface:#ffffff; --surface-2:#f5f7f9;
+  --line:#dce2e8; --line-2:#c2ccd6;
+  --accent:#0b5b68; --accent-2:#0e7482; --accent-soft:#e0f0f2;
+  --done:#146c43; --done-bg:#e3f3ea;
+  --active:#1c5aa6; --active-bg:#e5edf9;
+  --risk:#b02a20; --risk-bg:#fbe8e6;
+  --idle:#8a5a06; --idle-bg:#fbf0da;
+  --off:#59636e; --off-bg:#ebeef1;
+  --c1:#0b5b68; --c2:#1c5aa6; --c3:#6b4c9a; --c4:#a8542a;
+  --c5:#2b7a5b; --c6:#8a5a06; --c7:#3f5566; --c8:#a03a63;
+  --ui:"Segoe UI Variable Text","Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;
+  --mono:"Cascadia Mono",Consolas,"SF Mono","JetBrains Mono",ui-monospace,"Courier New",monospace;
+  --r:10px; --shadow:0 1px 2px #10182010,0 6px 18px #1018200f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--ui);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:4px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.wrap{max-width:1440px;margin:0 auto;padding:0 20px}
+
+.topbar{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.topbar::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(#ffffff0d 1px,transparent 1px),linear-gradient(90deg,#ffffff0d 1px,transparent 1px);background-size:26px 26px}
+.topbar .wrap{position:relative;z-index:1;display:flex;gap:18px;align-items:center;justify-content:space-between;padding:15px 20px;flex-wrap:wrap}
+.brand h1{margin:0;font-size:19px;font-weight:650;letter-spacing:-.015em}
+.brand .meta{font-family:var(--mono);font-size:11px;color:#9fb0bd;margin-top:3px;text-transform:uppercase;letter-spacing:.08em}
+.brand .meta b{color:#dfe8ee;font-weight:600}\n.online-help{font-size:11px;color:#9fb0bd;margin-left:8px}
+.topacts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.viewas{display:flex;align-items:center;gap:7px;background:#ffffff14;border:1px solid #ffffff2e;border-radius:8px;padding:4px 4px 4px 11px}
+.viewas label{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#9fb0bd}
+.viewas select{background:#1c2733;color:#fff;border:1px solid #ffffff2e;border-radius:6px;padding:5px 7px;font-size:13px;font-weight:600}
+
+.btn{border-radius:8px;padding:8px 13px;font-size:13px;font-weight:600;border:1px solid transparent;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;transition:background .12s,border-color .12s,color .12s}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-2)}
+.btn-ghost{background:#ffffff14;color:#e7edf2;border-color:#ffffff2e}.btn-ghost:hover{background:#ffffff26}
+.btn-quiet{background:var(--surface);color:var(--ink-2);border-color:var(--line-2)}.btn-quiet:hover{background:var(--surface-2);color:var(--ink)}
+.btn-danger{background:#fff;color:var(--risk);border-color:#e8c3bf}.btn-danger:hover{background:var(--risk-bg)}
+.btn-sm{padding:5px 9px;font-size:12px;border-radius:7px}
+.icon-btn{width:28px;height:28px;display:inline-grid;place-items:center;border:1px solid var(--line-2);border-radius:7px;background:var(--surface);color:var(--muted);font-size:14px;line-height:1}
+.icon-btn:hover{color:var(--ink);border-color:var(--muted)}
+.icon-btn.rm:hover{color:var(--risk);border-color:#e8c3bf;background:var(--risk-bg)}
+.icon-btn:disabled{opacity:.35;cursor:not-allowed}
+
+.filters{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.filters .wrap{display:flex;gap:14px;align-items:flex-end;padding:12px 20px;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field > label{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.ctl{border:1px solid var(--line-2);border-radius:8px;padding:7px 9px;background:var(--surface);min-width:128px;max-width:100%}
+.ctl:hover{border-color:var(--muted)}
+input[type=date].ctl,input[type=number].ctl{font-family:var(--mono);font-size:13px}
+.grow{flex:1;min-width:160px}.grow .ctl{width:100%}
+
+.overview{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:16px;margin:20px 0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 18px}
+.panel-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:14px}
+.panel-h h2{margin:0;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.panel-h .note{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{border-left:2px solid var(--line-2);padding-left:11px}
+.stat b{display:block;font-family:var(--mono);font-size:27px;font-weight:600;letter-spacing:-.03em;line-height:1.1}
+.stat small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.stat.s-done{border-color:var(--done)}.stat.s-done b{color:var(--done)}
+.stat.s-active{border-color:var(--active)}.stat.s-active b{color:var(--active)}
+.stat.s-risk{border-color:var(--risk)}.stat.s-risk b{color:var(--risk)}
+.meter{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);margin-top:18px}
+.meter button{flex:0 0 auto;height:100%;border-right:1px solid #ffffff80}
+.meter button:hover{filter:brightness(1.12)}
+.meter .empty{flex:1;background:repeating-linear-gradient(135deg,var(--surface-2) 0 6px,#e6eaee 6px 12px)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:11px}
+.legend button{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2);padding:2px 0}
+.legend button:hover{color:var(--ink)}
+.legend i{width:9px;height:9px;border-radius:3px;flex:none}
+.legend span{font-family:var(--mono);color:var(--muted)}
+.legend button[aria-pressed=true]{font-weight:700;color:var(--accent)}
+.rows{display:flex;flex-direction:column;gap:11px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px}
+.row span{color:var(--muted)}.row b{font-family:var(--mono);font-weight:600}
+.track{height:7px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.track i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+
+/* charts */
+.charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:20px}
+.chartbox{display:flex;gap:16px;align-items:center}
+.chartbox svg{flex:none}
+.chartbox .keys{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;max-height:190px;overflow:auto}
+.key{display:flex;align-items:center;gap:8px;font-size:12.5px;width:100%;text-align:left;padding:3px 4px;border-radius:6px}
+.key:hover{background:var(--surface-2)}
+.key i{width:10px;height:10px;border-radius:3px;flex:none}
+.key .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+.key .vl{font-family:var(--mono);font-size:11.5px;color:var(--muted);flex:none}
+.key[aria-pressed=true]{background:var(--accent-soft)}
+.key[aria-pressed=true] .nm{font-weight:700;color:var(--accent)}
+.slice{transition:opacity .12s,transform .12s;transform-origin:center;cursor:pointer}
+.slice:hover{opacity:.82}
+.hole b{font-family:var(--mono);font-size:22px;font-weight:650;fill:var(--ink)}
+.hole small{font-size:9px;fill:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.nodata{width:100%;text-align:center;color:var(--muted);font-size:12.5px;padding:34px 0}
+.loadbars{display:flex;flex-direction:column;gap:12px;max-height:210px;overflow:auto;padding-right:4px}
+.lb{display:grid;grid-template-columns:22px 1fr auto;gap:9px;align-items:center}
+.lb .bar{height:16px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;position:relative}
+.lb .bar i{display:block;height:100%}
+.lb .bar .cap{position:absolute;top:0;bottom:0;width:1px;background:var(--ink);opacity:.35}
+.lb .who{font-size:12.5px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb .val{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+
+/* team */
+.teamgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:14px}
+.member{border:1px solid var(--line);border-radius:11px;padding:13px;background:var(--surface-2);display:flex;flex-direction:column;gap:11px}
+.member .top{display:flex;gap:11px;align-items:center}
+.av{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff;flex:none;letter-spacing:.02em}
+.av.sm{width:26px;height:26px;border-radius:8px;font-size:10.5px}
+.member .nm{font-weight:650;line-height:1.25}
+.member .rl{font-size:11.5px;color:var(--muted)}
+.member .foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.av-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px}
+.a-free{background:var(--done-bg);color:var(--done)}
+.a-tight{background:var(--idle-bg);color:var(--idle)}
+.a-full{background:var(--risk-bg);color:var(--risk)}
+.a-off{background:var(--off-bg);color:var(--off)}
+.cap{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.queue{margin-top:16px;border-top:1px dashed var(--line-2);padding-top:14px}
+.qrow{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #eef1f4;flex-wrap:wrap}
+.qrow:last-child{border-bottom:0}
+.qrow .t{flex:1;min-width:150px;font-size:13px}
+.qrow .t small{display:block;color:var(--muted);font-size:11.5px}
+.qrow select{border:1px solid var(--line-2);border-radius:7px;padding:5px 7px;font-size:12.5px}
+
+/* table */
+.tablecard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:26px}
+.tablecard > header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tablecard h2{margin:0;font-size:15px;font-weight:650}
+.scroller{overflow:auto;max-height:66vh}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:1240px}
+th{position:sticky;top:0;z-index:2;background:var(--surface-2);text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:9px 12px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+th.sortable{cursor:pointer;user-select:none}th.sortable:hover{color:var(--ink)}
+th .arrow{opacity:0;margin-left:4px}th[data-dir] .arrow{opacity:1;color:var(--accent)}
+td{padding:10px 12px;border-bottom:1px solid #eef1f4;vertical-align:middle}
+tbody tr:hover{background:#f8fbfc}tbody tr:last-child td{border-bottom:0}
+td.tick{padding:0;width:3px}td.tick i{display:block;width:3px;height:42px;border-radius:0 3px 3px 0}
+.task-t{font-weight:600}
+.task-n{display:block;font-size:12px;color:var(--muted);margin-top:2px;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who{display:flex;align-items:center;gap:8px;min-width:130px}
+.who .nm{font-size:12.5px;font-weight:600;line-height:1.2}
+.who small{display:block;color:var(--muted);font-weight:400;font-size:11px}
+.unassigned{font-size:12px;color:var(--idle);font-weight:600;background:var(--idle-bg);padding:3px 8px;border-radius:20px}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11.5px;font-weight:650;white-space:nowrap}
+.t-done{background:var(--done-bg);color:var(--done)}.t-active{background:var(--active-bg);color:var(--active)}
+.t-risk{background:var(--risk-bg);color:var(--risk)}.t-idle{background:var(--idle-bg);color:var(--idle)}
+.t-off{background:var(--off-bg);color:var(--off)}
+.pri{font-size:12px;font-weight:650;display:inline-flex;align-items:center;gap:6px}
+.pri i{width:6px;height:6px;border-radius:50%;background:var(--line-2)}
+.pri.p0 i{background:var(--risk)}.pri.p1 i{background:var(--idle)}.pri.p2 i{background:var(--off)}
+.pcell{display:flex;align-items:center;gap:8px;min-width:96px}
+.pcell .track{flex:1}.pcell b{font-family:var(--mono);font-size:12px;font-weight:600;width:34px;text-align:right;color:var(--ink-2)}
+.dates{font-family:var(--mono);font-size:12px;color:var(--ink-2);white-space:nowrap}
+.late{color:var(--risk);font-weight:600}.late::after{content:" ▲";font-size:9px}
+.acts{display:flex;gap:6px;justify-content:flex-end}
+.empty-state{padding:56px 20px;text-align:center;color:var(--muted)}
+.empty-state b{display:block;color:var(--ink);font-size:15px;margin-bottom:6px}
+
+/* modals */
+.overlay{position:fixed;inset:0;background:#10182099;display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
+.overlay.open{display:flex}
+.sheet{background:var(--surface);border-radius:14px;width:min(880px,100%);max-height:92vh;display:flex;flex-direction:column;box-shadow:0 24px 60px #10182052;overflow:hidden}
+.sheet.narrow{width:min(470px,100%)}
+.sheet > header{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sheet > header h2{margin:0;font-size:17px;font-weight:650}
+.sheet > header p{margin:3px 0 0;font-size:12.5px;color:var(--muted)}
+.sheet .body{padding:20px 22px;overflow:auto}
+.sheet > footer{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:9px;background:var(--surface-2);flex-wrap:wrap}
+.sheet > footer .left{margin-right:auto;font-size:12px;color:var(--muted);align-self:center}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.formgrid .full{grid-column:1/-1}.formgrid .ctl{width:100%;min-width:0}
+.req{color:var(--risk)}
+.combo{display:flex;gap:6px}.combo select{flex:1;min-width:0}
+.inline-add{display:none;gap:6px;margin-top:6px}.inline-add.on{display:flex}
+.inline-add input{flex:1;min-width:0}
+textarea.ctl{width:100%;resize:vertical;min-height:60px;font-size:13px}
+.helper{font-size:11.5px;color:var(--muted)}
+
+.tabs{display:flex;gap:4px;padding:0 22px;border-bottom:1px solid var(--line);background:var(--surface-2);overflow:auto}
+.tabs button{padding:11px 13px;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected=true]{color:var(--accent);border-bottom-color:var(--accent)}
+.tabs button span{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:5px}
+.hint{font-size:12.5px;color:var(--muted);margin:0 0 14px}
+.items{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--line);border-radius:9px;background:var(--surface);flex-wrap:wrap}
+.item .ord{font-family:var(--mono);font-size:11px;color:var(--muted);width:20px;text-align:center;flex:none}
+.item input.name{flex:1;min-width:90px;border:1px solid transparent;background:transparent;border-radius:6px;padding:5px 7px;font-weight:600}
+.item input.name:hover{border-color:var(--line-2)}
+.item input.name:focus{border-color:var(--accent-2);background:var(--surface)}
+.item select.tone,.item .mini-ctl{border:1px solid var(--line-2);border-radius:7px;padding:5px 7px;font-size:12px;flex:none;background:var(--surface)}
+.item input.mini-ctl{width:76px}
+.item .used{font-family:var(--mono);font-size:11px;color:var(--muted);flex:none}
+.addbar{display:flex;gap:8px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--line-2);flex-wrap:wrap}
+.addbar input,.addbar select{flex:1;min-width:120px}
+.list-empty{padding:26px;text-align:center;color:var(--muted);border:1px dashed var(--line-2);border-radius:9px;font-size:13px}
+
+/* run-filters button state */
+.btn-primary.pending{background:var(--idle);box-shadow:0 0 0 3px #fbf0da}
+.btn-primary.pending:hover{background:#7a5005}
+.fstate{font-size:11.5px;color:var(--idle);font-weight:600;align-self:center;min-height:16px}
+
+/* planner */
+.ptabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:-2px 0 14px;overflow:auto}
+.ptabs button{padding:9px 12px;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.ptabs button:hover{color:var(--ink)}
+.ptabs button[aria-selected=true]{color:var(--accent);border-bottom-color:var(--accent)}
+.pfilters{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px}
+.pfilters .field > label{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.pfilters .ctl{background:var(--surface)}
+.pfilters .chk{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-2);padding-bottom:8px}
+.psum{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--ink-2);margin-bottom:12px}
+.psum b{font-family:var(--mono);font-weight:650}
+.psum .warn{color:var(--idle);font-weight:600}
+.pempty{padding:26px;text-align:center;color:var(--muted);border:1px dashed var(--line-2);border-radius:9px;font-size:13px}
+.avlist{display:flex;flex-direction:column;gap:9px;max-height:420px;overflow:auto;padding-right:3px}
+.avrow{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:11px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface)}
+.avrow.is-full{border-color:#e8c3bf;background:#fffafa}
+.avrow.is-off{opacity:.72}
+.avrow .nm{font-weight:650;font-size:13.5px;line-height:1.25}
+.avrow .nm small{display:block;font-weight:400;font-size:11.5px;color:var(--muted)}
+.avrow .bar{height:8px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;margin:6px 0 5px;position:relative}
+.avrow .bar i{display:block;height:100%}
+.avend{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.freeh{font-family:var(--mono);font-size:13px;font-weight:650;color:var(--done)}
+.freeh.none{color:var(--risk)}
+.ptable-wrap{overflow:auto;max-height:460px;border:1px solid var(--line);border-radius:10px}
+table.ptable{width:100%;min-width:720px;border-collapse:separate;border-spacing:0}
+table.ptable th{position:sticky;top:0;z-index:2;background:var(--surface-2);text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:9px 11px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+table.ptable td{padding:9px 11px;border-bottom:1px solid #eef1f4;vertical-align:middle;font-size:13px}
+table.ptable tr:last-child td{border-bottom:0}
+table.ptable td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+table.ptable tbody tr:hover{background:#f8fbfc}
+.mini-bar{height:8px;width:100%;min-width:80px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.mini-bar i{display:block;height:100%}
+.tasklist{margin:0;padding:0;list-style:none}
+.tasklist li{display:flex;gap:9px;align-items:baseline;padding:5px 0;border-bottom:1px dashed var(--line);font-size:12.5px}
+.tasklist li:last-child{border-bottom:0}
+.tasklist .dt{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+.tasklist .tk{flex:1;min-width:0}
+details.tdet{margin-top:4px}
+details.tdet summary{cursor:pointer;font-size:12px;color:var(--accent);font-weight:600;list-style:none}
+details.tdet summary::-webkit-details-marker{display:none}
+details.tdet summary::before{content:"▸ ";font-size:10px}
+details.tdet[open] summary::before{content:"▾ "}
+details.tdet .box{border:1px solid var(--line);border-radius:9px;padding:8px 11px;margin-top:7px;background:var(--surface-2)}
+
+#toast{position:fixed;right:20px;bottom:20px;z-index:90;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.toast{background:var(--ink);color:#fff;padding:10px 15px;border-radius:9px;font-size:13px;box-shadow:0 10px 26px #10182047;animation:rise .18s ease-out;max-width:340px}
+.toast.bad{background:var(--risk)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+footer.foot{color:var(--muted);font-size:12px;text-align:center;padding:0 20px 30px;line-height:1.7}
+
+@media(max-width:1120px){.charts{grid-template-columns:1fr 1fr}.charts .panel:last-child{grid-column:1/-1}}
+@media(max-width:980px){.overview{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.charts{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.filters{position:static}.topacts .btn{flex:1;justify-content:center}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{.topbar,.filters,.overview,.charts,#team,#planner,.acts,.tablecard>header,#toast,footer.foot{display:none!important}
+  body{background:#fff}.scroller{max-height:none;overflow:visible}.tablecard{border:0;box-shadow:none}th{background:#fff}}
+</style>
+
+<style id="online-v2-auth-css">
+#authGate{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0b1220,#172554 55%,#0f766e);display:flex;align-items:center;justify-content:center;padding:24px}
+#authGate.hidden{display:none}
+.auth-card{width:min(430px,100%);background:#fff;border-radius:22px;padding:30px;box-shadow:0 25px 70px rgba(0,0,0,.28)}
+.auth-brand{font-size:26px;font-weight:800;margin-bottom:6px}.auth-sub{color:#64748b;margin-bottom:24px}
+.auth-tabs{display:flex;gap:6px;background:#f1f5f9;padding:5px;border-radius:12px;margin-bottom:20px}
+.auth-tabs button{flex:1;border:0;padding:10px;border-radius:9px;background:transparent;cursor:pointer;font-weight:700}
+.auth-tabs button.active{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.auth-form{display:grid;gap:12px}.auth-form input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:10px}
+.auth-form button{padding:12px;border:0;border-radius:10px;background:#2563eb;color:#fff;font-weight:800;cursor:pointer}
+.auth-msg{min-height:20px;color:#dc2626;font-size:13px}.auth-note{font-size:12px;color:#64748b;margin-top:12px;line-height:1.5}
+#roleBadge{display:none;margin-left:8px;padding:3px 8px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:800}
+#onlineTeamPanel{position:fixed;right:20px;bottom:20px;width:min(390px,calc(100vw - 40px));z-index:9000;background:#fff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 15px 45px rgba(15,23,42,.18);padding:18px;display:none}
+#onlineTeamPanel.open{display:block}.otp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+#onlineTeamPanel table{width:100%;border-collapse:collapse;font-size:12px}#onlineTeamPanel th,#onlineTeamPanel td{padding:8px;border-bottom:1px solid #e2e8f0;text-align:left}
+.v2-btn{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:7px 10px;cursor:pointer;font-weight:700}
+.v2-danger{color:#b91c1c;border-color:#fecaca}
+</style>
+</head>
+<body>
+<div id="authGate">
+  <div class="auth-card">
+    <div class="auth-brand">Team Task Tracker</div>
+    <div class="auth-sub">Secure team workspace</div>
+    <div class="auth-tabs">
+      <button id="loginTab" class="active" type="button">Sign in</button>
+      <button id="registerTab" type="button">Create account</button>
+    </div>
+    <form id="authForm" class="auth-form">
+      <input id="authName" placeholder="Full name" autocomplete="name" style="display:none">
+      <input id="authEmail" type="email" placeholder="Work email" autocomplete="email" required>
+      <input id="authPassword" type="password" placeholder="Password (min. 6 characters)" autocomplete="current-password" required>
+      <button id="authSubmit" type="submit">Sign in</button>
+      <div id="authMsg" class="auth-msg"></div>
+    </form>
+    <div class="auth-note">Admin and Member roles are enforced by the online security layer. Configure Firebase Authentication and Firestore/Realtime Database rules before production use.</div>
+  </div>
+</div>
+
+<div id="onlineTeamPanel">
+  <div class="otp-head"><strong>Team Access</strong><button id="closeTeamPanel" class="v2-btn">Close</button></div>
+  <div id="currentUserLine" style="font-size:12px;color:#64748b;margin-bottom:12px"></div>
+  <div id="adminOnlyArea">
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <input id="inviteEmail" type="email" placeholder="Member email" style="flex:1;padding:8px;border:1px solid #cbd5e1;border-radius:8px">
+      <select id="inviteRole" style="padding:8px;border:1px solid #cbd5e1;border-radius:8px"><option>Member</option><option>Admin</option></select>
+      <button id="addInvite" class="v2-btn">Add</button>
+    </div>
+    <div id="teamUsers"></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:12px">
+    <button id="logoutBtn" class="v2-btn v2-danger">Sign out</button>
+  </div>
+</div>
+
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Team Task Tracker</h1>
+      <div class="meta">Shared workspace · <b id="stamp">starting…</b><span class="online-help">Live sync enabled when Firebase is configured</span></div>
+    </div>
+    <div class="topacts">
+      <div class="viewas"><label for="viewAs">Signed in as</label><select id="viewAs"><option value="">Project manager</option><option value="mt00i72wo4v3">Basavaraj</option><option value="mt00icblf129">Dhanesh</option><option value="mt00ixx1uozd">Lohith</option><option value="mt00j4tcqbhm">Ravi</option><option value="mt0xitbya6ck">Amith</option><option value="mt0xj0q54zyf">Ranjith</option><option value="mt0xjaouegu8">Bhargav</option></select></div>
+      <button class="btn btn-ghost" id="btnTeam">Team</button>
+      <button class="btn btn-ghost" id="btnLists">Lists</button>
+      <button class="btn btn-ghost" id="btnCsv">Export CSV</button>
+      <button class="btn btn-ghost" id="btnBackup">Backup</button>
+      <button class="btn btn-ghost" id="btnRestore">Import</button>
+      <button class="btn btn-primary" id="btnNew">＋ New task</button>
+    </div>
+  </div>
+</header>
+
+<div class="filters">
+  <div class="wrap">
+    <div class="field"><label for="fScope">Period</label>
+      <select class="ctl" id="fScope">
+        <option value="day">Selected day</option><option value="week">Week of date</option>
+        <option value="month">Month of date</option><option value="all" selected="">All dates</option>
+      </select></div>
+    <div class="field"><label for="fDate">Date</label><input class="ctl" id="fDate" type="date"></div>
+    <div class="field"><label for="fMember">Team member</label><select class="ctl" id="fMember"><option value="">Whole team</option><option value="__none">Unassigned</option><option value="mt00i72wo4v3">Basavaraj</option><option value="mt00icblf129">Dhanesh</option><option value="mt00ixx1uozd">Lohith</option><option value="mt00j4tcqbhm">Ravi</option><option value="mt0xitbya6ck">Amith</option><option value="mt0xj0q54zyf">Ranjith</option><option value="mt0xjaouegu8">Bhargav</option></select></div>
+    <div class="field"><label for="fProject">Project / area</label><select class="ctl" id="fProject"><option value="">All projects</option><option value="4XM">4XM</option><option value="2XM">2XM</option><option value="4XM NC">4XM NC</option><option value="2XM NC">2XM NC</option><option value="Meeting">Meeting</option><option value="Other">Other</option></select></div>
+    <div class="field"><label for="fStatus">Status</label><select class="ctl" id="fStatus"><option value="">All statuses</option><option value="At to start">At to start</option><option value="In Progress">In Progress</option><option value="Review">Review</option><option value="Completed">Completed</option><option value="On Hold">On Hold</option><option value="Cancelled">Cancelled</option></select></div>
+    <div class="field"><label for="fDept">Department</label><select class="ctl" id="fDept"><option value="">All departments</option><option value="Tower Engineering">Tower Engineering</option><option value="Mechanical Engineering">Mechanical Engineering</option><option value="Electrical Engineering">Electrical Engineering</option><option value="Tooling Engineering">Tooling Engineering</option><option value="Blade Engineering">Blade Engineering</option><option value="Documentation">Documentation</option></select></div>
+    <div class="field grow"><label for="fSearch">Search</label><input class="ctl" id="fSearch" type="search" placeholder="Task, note or project"></div>
+    <button class="btn btn-primary" id="btnApply" title="Apply the selected dropdowns and dates">▶ Run filters</button>
+    <button class="btn btn-quiet" id="btnReset">Clear filters</button>
+    <span class="fstate" id="filterState"></span>
+  </div>
+</div>
+
+<main class="wrap">
+  <section class="overview">
+    <div class="panel">
+      <div class="panel-h"><h2>Workload</h2><span class="note" id="scopeNote">all dates</span></div>
+      <div class="stats">
+        <div class="stat"><b id="kTotal">2</b><small>Tasks in view</small></div>
+        <div class="stat s-done"><b id="kDone">0</b><small>Completed</small></div>
+        <div class="stat s-active"><b id="kActive">2</b><small>In progress</small></div>
+        <div class="stat s-risk"><b id="kRisk">0</b><small>Blocked / at risk</small></div>
+      </div>
+      <div class="meter" id="meter"><button style="width:100.00%;background:var(--active);" data-key="In Progress" data-kind="status" title="In Progress: 2"></button></div>
+      <div class="legend" id="legend"><button data-key="In Progress" data-kind="status" aria-pressed="false"><i style="background:var(--active)"></i>In Progress <span>2</span></button></div>
+    </div>
+    <div class="panel">
+      <div class="panel-h"><h2>Delivery</h2><span class="note" id="rateNote">0% of tasks closed</span></div>
+      <div class="rows">
+        <div><div class="row"><span>Average completion</span><b id="kAvg">0%</b></div><div class="track" style="margin-top:6px"><i id="barAvg" style="width: 0%;"></i></div></div>
+        <div class="row"><span>High priority open</span><b id="kHigh">0</b></div>
+        <div class="row"><span>Past due</span><b id="kLate">0</b></div>
+        <div class="row"><span>Unassigned</span><b id="kUn">0</b></div>
+        <div class="row"><span>People engaged</span><b id="kPeople">2</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="charts">
+    <div class="panel"><div class="panel-h"><h2>Status mix</h2><span class="note">click to filter</span></div>
+      <div class="chartbox"><svg id="donut" width="150" height="150" viewBox="0 0 150 150" role="img" aria-label="Task status distribution"><g transform="rotate(-90 75 75)"><circle class="slice" cx="75" cy="75" r="58" fill="none" stroke="var(--active)" stroke-width="20" stroke-dasharray="364.42 0.00" stroke-dashoffset="0.00" data-key="In Progress" data-kind="status"><title>In Progress: 2 (100%)</title></circle></g>
+    <text class="hole" x="75" y="72" text-anchor="middle"><tspan font-family="var(--mono)" font-size="24" font-weight="650" fill="#101820">0%</tspan></text>
+    <text x="75" y="88" text-anchor="middle" font-size="9" fill="#6c7885" letter-spacing="1.2">closed</text></svg><div class="keys" id="donutKeys"><button class="key" data-key="In Progress" data-kind="status" aria-pressed="false">
+      <i style="background:var(--active)"></i><span class="nm">In Progress</span><span class="vl">2 · 100%</span></button></div></div></div>
+    <div class="panel"><div class="panel-h"><h2>Load by project</h2><span class="note">click to filter</span></div>
+      <div class="chartbox"><svg id="pie" width="150" height="150" viewBox="0 0 150 150" role="img" aria-label="Task distribution by project"><path class="slice" d="M75,75 L75.00,11.00 A64,64 0 0 1 75.00,139.00 Z" fill="var(--c1)" stroke="#fff" stroke-width="1.5" data-key="2XM" data-kind="project"><title>2XM: 1 (50%)</title></path><path class="slice" d="M75,75 L75.00,139.00 A64,64 0 0 1 75.00,11.00 Z" fill="var(--c2)" stroke="#fff" stroke-width="1.5" data-key="4XM" data-kind="project"><title>4XM: 1 (50%)</title></path></svg><div class="keys" id="pieKeys"><button class="key" data-key="2XM" data-kind="project" aria-pressed="false">
+      <i style="background:var(--c1)"></i><span class="nm">2XM</span><span class="vl">1 · 50%</span></button><button class="key" data-key="4XM" data-kind="project" aria-pressed="false">
+      <i style="background:var(--c2)"></i><span class="nm">4XM</span><span class="vl">1 · 50%</span></button></div></div></div>
+    <div class="panel"><div class="panel-h"><h2>Capacity used</h2><span class="note">open work · hrs/week</span></div>
+      <div class="loadbars" id="loadBars">
+    <div class="lb">
+      <span class="av sm" style="background:var(--c6)">D</span>
+      <div><div class="who">Dhanesh</div>
+        <div class="bar"><i style="width:100.0%;background:var(--risk)"></i>
+        <span class="cap" style="left:100.0%"></span></div></div>
+      <span class="val">40/40h</span>
+    </div>
+    <div class="lb">
+      <span class="av sm" style="background:var(--c5)">B</span>
+      <div><div class="who">Basavaraj</div>
+        <div class="bar"><i style="width:60.0%;background:var(--done)"></i>
+        <span class="cap" style="left:100.0%"></span></div></div>
+      <span class="val">24/40h</span>
+    </div>
+    <div class="lb">
+      <span class="av sm" style="background:var(--c4)">L</span>
+      <div><div class="who">Lohith</div>
+        <div class="bar"><i style="width:0.0%;background:var(--done)"></i>
+        <span class="cap" style="left:100.0%"></span></div></div>
+      <span class="val">0/40h</span>
+    </div>
+    <div class="lb">
+      <span class="av sm" style="background:var(--c7)">R</span>
+      <div><div class="who">Ravi</div>
+        <div class="bar"><i style="width:0.0%;background:var(--done)"></i>
+        <span class="cap" style="left:100.0%"></span></div></div>
+      <span class="val">0/40h</span>
+    </div>
+    <div class="lb">
+      <span class="av sm" style="background:var(--c7)">A</span>
+      <div><div class="who">Amith</div>
+        <div class="bar"><i style="width:0.0%;background:var(--done)"></i>
+        <span class="cap" style="left:100.0%"></span></div></div>
+      <span class="val">0/40h</span>
+    </div>
+    <div class="lb">
+      <span class="av sm" style="background:var(--c5)">R</span>
+      <div><div class="who">Ranjith</div>
+        <div class="bar"><i style="width:0.0%;background:var(--done)"></i>
+        <span class="cap" style="left:100.0%"></span></div></div>
+      <span class="val">0/40h</span>
+    </div>
+    <div class="lb">
+      <span class="av sm" style="background:var(--c2)">B</span>
+      <div><div class="who">Bhargav</div>
+        <div class="bar"><i style="width:0.0%;background:var(--done)"></i>
+        <span class="cap" style="left:100.0%"></span></div></div>
+      <span class="val">0/40h</span>
+    </div></div></div>
+  </section>
+
+  <section class="panel" id="team" style="margin-bottom:20px">
+    <div class="panel-h"><h2>Team availability</h2><span class="note" id="teamNote">6 of 7 available</span></div>
+    <div class="teamgrid" id="teamGrid"><div class="member">
+      <div class="top"><span class="av" style="background:var(--c5)">B</span>
+        <div><div class="nm">Basavaraj</div><div class="rl">Team member</div></div></div>
+      <div class="track"><i style="width:60%;background:var(--done)"></i></div>
+      <div class="foot"><span class="cap">1 open · 60% of 40h</span>
+        <span class="av-badge a-free">Available</span></div>
+      <button class="btn btn-quiet btn-sm" data-assign-to="mt00i72wo4v3">Assign a task</button>
+    </div><div class="member">
+      <div class="top"><span class="av" style="background:var(--c6)">D</span>
+        <div><div class="nm">Dhanesh</div><div class="rl">Team member</div></div></div>
+      <div class="track"><i style="width:100%;background:var(--risk)"></i></div>
+      <div class="foot"><span class="cap">1 open · 100% of 40h</span>
+        <span class="av-badge a-full">At capacity</span></div>
+      <button class="btn btn-quiet btn-sm" data-assign-to="mt00icblf129">Assign a task</button>
+    </div><div class="member">
+      <div class="top"><span class="av" style="background:var(--c4)">L</span>
+        <div><div class="nm">Lohith</div><div class="rl">Team member</div></div></div>
+      <div class="track"><i style="width:0%;background:var(--done)"></i></div>
+      <div class="foot"><span class="cap">0 open · 0% of 40h</span>
+        <span class="av-badge a-free">Available</span></div>
+      <button class="btn btn-quiet btn-sm" data-assign-to="mt00ixx1uozd">Assign a task</button>
+    </div><div class="member">
+      <div class="top"><span class="av" style="background:var(--c7)">R</span>
+        <div><div class="nm">Ravi</div><div class="rl">Team member</div></div></div>
+      <div class="track"><i style="width:0%;background:var(--done)"></i></div>
+      <div class="foot"><span class="cap">0 open · 0% of 40h</span>
+        <span class="av-badge a-free">Available</span></div>
+      <button class="btn btn-quiet btn-sm" data-assign-to="mt00j4tcqbhm">Assign a task</button>
+    </div><div class="member">
+      <div class="top"><span class="av" style="background:var(--c7)">A</span>
+        <div><div class="nm">Amith</div><div class="rl">Team member</div></div></div>
+      <div class="track"><i style="width:0%;background:var(--done)"></i></div>
+      <div class="foot"><span class="cap">0 open · 0% of 40h</span>
+        <span class="av-badge a-free">Available</span></div>
+      <button class="btn btn-quiet btn-sm" data-assign-to="mt0xitbya6ck">Assign a task</button>
+    </div><div class="member">
+      <div class="top"><span class="av" style="background:var(--c5)">R</span>
+        <div><div class="nm">Ranjith</div><div class="rl">Team member</div></div></div>
+      <div class="track"><i style="width:0%;background:var(--done)"></i></div>
+      <div class="foot"><span class="cap">0 open · 0% of 40h</span>
+        <span class="av-badge a-free">Available</span></div>
+      <button class="btn btn-quiet btn-sm" data-assign-to="mt0xj0q54zyf">Assign a task</button>
+    </div><div class="member">
+      <div class="top"><span class="av" style="background:var(--c2)">B</span>
+        <div><div class="nm">Bhargav</div><div class="rl">Team member</div></div></div>
+      <div class="track"><i style="width:0%;background:var(--done)"></i></div>
+      <div class="foot"><span class="cap">0 open · 0% of 40h</span>
+        <span class="av-badge a-free">Available</span></div>
+      <button class="btn btn-quiet btn-sm" data-assign-to="mt0xjaouegu8">Assign a task</button>
+    </div></div>
+    <div class="queue" id="queue"><div class="cap">Every open task has an owner.</div></div>
+  </section>
+
+  <section class="panel" id="planner" style="margin-bottom:20px">
+    <div class="panel-h"><h2>Planner · project manager</h2><span class="note" id="planNote">live — updates as tasks are saved</span></div>
+    <div class="ptabs" id="planTabs" role="tablist">
+      <button role="tab" data-ptab="avail" aria-selected="true">Who is free on a date</button>
+      <button role="tab" data-ptab="load" aria-selected="false">Workload from date to date</button>
+    </div>
+
+    <div class="ppane" id="paneAvail">
+      <div class="pfilters">
+        <div class="field"><label for="aDate">Availability on</label><input class="ctl" id="aDate" type="date"></div>
+        <div class="field"><label for="aHours">New task size (hrs)</label><input class="ctl" id="aHours" type="number" min="0" max="80" step="1" value="4"></div>
+        <div class="field"><label for="aDept">Department</label><select class="ctl" id="aDept"><option value="">Any department</option><option value="Tower Engineering">Tower Engineering</option><option value="Mechanical Engineering">Mechanical Engineering</option><option value="Electrical Engineering">Electrical Engineering</option><option value="Tooling Engineering">Tooling Engineering</option><option value="Blade Engineering">Blade Engineering</option><option value="Documentation">Documentation</option></select></div>
+        <div class="field"><label for="aProject">Has worked on</label><select class="ctl" id="aProject"><option value="">Any project</option><option value="4XM">4XM</option><option value="2XM">2XM</option><option value="4XM NC">4XM NC</option><option value="2XM NC">2XM NC</option><option value="Meeting">Meeting</option><option value="Other">Other</option></select></div>
+        <div class="field"><label for="aMode">Show</label>
+          <select class="ctl" id="aMode">
+            <option value="fit">Can take this task</option>
+            <option value="free">Has any free hours</option>
+            <option value="all">Everyone</option>
+          </select></div>
+        <div class="field grow"><label for="aSearch">Name</label><input class="ctl" id="aSearch" type="search" placeholder="Search a person"></div>
+        <button class="btn btn-primary" id="btnFindAvail">▶ Run availability filter</button>
+        <button class="btn btn-quiet" id="btnClearAvail">Clear</button>
+      </div>
+      <div id="availSum" class="psum"><span>Date <b>2026-08-21</b></span><span>Task size <b>8h</b></span><span><b>5</b> of <b>7</b> in the team can take it that day</span><span>Matching this filter: <b>5</b> · fits <b>5</b></span></div>
+      <div id="availOut"><div class="avlist"><div class="avrow  ">
+      <span class="av" style="background:var(--c7)">A</span>
+      <div class="avmain">
+        <div class="nm">Amith<small>Team member</small></div>
+        <div class="bar"><i style="width:0%;background:var(--done)"></i></div>
+        <span class="cap">0.0h booked of 8.0h · 0 tasks running</span>
+        
+      </div>
+      <div class="avend">
+        <span class="freeh ">8.0h free</span>
+        <span class="av-badge a-free">Can take it</span>
+        <button class="btn btn-quiet btn-sm" data-assign-to="mt0xitbya6ck" data-assign-date="2026-08-21">Assign on 2026-08-21</button>
+      </div>
+    </div><div class="avrow  ">
+      <span class="av" style="background:var(--c2)">B</span>
+      <div class="avmain">
+        <div class="nm">Bhargav<small>Team member</small></div>
+        <div class="bar"><i style="width:0%;background:var(--done)"></i></div>
+        <span class="cap">0.0h booked of 8.0h · 0 tasks running</span>
+        
+      </div>
+      <div class="avend">
+        <span class="freeh ">8.0h free</span>
+        <span class="av-badge a-free">Can take it</span>
+        <button class="btn btn-quiet btn-sm" data-assign-to="mt0xjaouegu8" data-assign-date="2026-08-21">Assign on 2026-08-21</button>
+      </div>
+    </div><div class="avrow  ">
+      <span class="av" style="background:var(--c4)">L</span>
+      <div class="avmain">
+        <div class="nm">Lohith<small>Team member</small></div>
+        <div class="bar"><i style="width:0%;background:var(--done)"></i></div>
+        <span class="cap">0.0h booked of 8.0h · 0 tasks running</span>
+        
+      </div>
+      <div class="avend">
+        <span class="freeh ">8.0h free</span>
+        <span class="av-badge a-free">Can take it</span>
+        <button class="btn btn-quiet btn-sm" data-assign-to="mt00ixx1uozd" data-assign-date="2026-08-21">Assign on 2026-08-21</button>
+      </div>
+    </div><div class="avrow  ">
+      <span class="av" style="background:var(--c5)">R</span>
+      <div class="avmain">
+        <div class="nm">Ranjith<small>Team member</small></div>
+        <div class="bar"><i style="width:0%;background:var(--done)"></i></div>
+        <span class="cap">0.0h booked of 8.0h · 0 tasks running</span>
+        
+      </div>
+      <div class="avend">
+        <span class="freeh ">8.0h free</span>
+        <span class="av-badge a-free">Can take it</span>
+        <button class="btn btn-quiet btn-sm" data-assign-to="mt0xj0q54zyf" data-assign-date="2026-08-21">Assign on 2026-08-21</button>
+      </div>
+    </div><div class="avrow  ">
+      <span class="av" style="background:var(--c7)">R</span>
+      <div class="avmain">
+        <div class="nm">Ravi<small>Team member</small></div>
+        <div class="bar"><i style="width:0%;background:var(--done)"></i></div>
+        <span class="cap">0.0h booked of 8.0h · 0 tasks running</span>
+        
+      </div>
+      <div class="avend">
+        <span class="freeh ">8.0h free</span>
+        <span class="av-badge a-free">Can take it</span>
+        <button class="btn btn-quiet btn-sm" data-assign-to="mt00j4tcqbhm" data-assign-date="2026-08-21">Assign on 2026-08-21</button>
+      </div>
+    </div></div></div>
+    </div>
+
+    <div class="ppane" id="paneLoad" hidden="">
+      <div class="pfilters">
+        <div class="field"><label for="lFrom">From date</label><input class="ctl" id="lFrom" type="date"></div>
+        <div class="field"><label for="lTo">To date</label><input class="ctl" id="lTo" type="date"></div>
+        <div class="field"><label for="lMember">Team member</label><select class="ctl" id="lMember"><option value="">Everyone</option><option value="mt00i72wo4v3">Basavaraj</option><option value="mt00icblf129">Dhanesh</option><option value="mt00ixx1uozd">Lohith</option><option value="mt00j4tcqbhm">Ravi</option><option value="mt0xitbya6ck">Amith</option><option value="mt0xj0q54zyf">Ranjith</option><option value="mt0xjaouegu8">Bhargav</option></select></div>
+        <div class="field"><label for="lProject">Project / area</label><select class="ctl" id="lProject"><option value="">All projects</option><option value="4XM">4XM</option><option value="2XM">2XM</option><option value="4XM NC">4XM NC</option><option value="2XM NC">2XM NC</option><option value="Meeting">Meeting</option><option value="Other">Other</option></select></div>
+        <div class="field"><label for="lDept">Department</label><select class="ctl" id="lDept"><option value="">All departments</option><option value="Tower Engineering">Tower Engineering</option><option value="Mechanical Engineering">Mechanical Engineering</option><option value="Electrical Engineering">Electrical Engineering</option><option value="Tooling Engineering">Tooling Engineering</option><option value="Blade Engineering">Blade Engineering</option><option value="Documentation">Documentation</option></select></div>
+        <label class="chk"><input type="checkbox" id="lDone"> Include completed / closed</label>
+        <button class="btn btn-primary" id="btnRunLoad">▶ Run workload report</button>
+        <button class="btn btn-quiet" id="btnLoadCsv">Export report</button>
+      </div>
+      <div id="loadSum" class="psum"></div>
+      <div id="loadOut"><div class="pempty">Pick a <b>from</b> and <b>to</b> date, then press <b>Run workload report</b> to see how loaded each person is across that window.</div></div>
+    </div>
+  </section>
+
+  <section class="tablecard">
+    <header><h2>Activity log</h2><span class="mono" id="count" style="color:var(--muted);font-size:12px">2 records</span></header>
+    <div class="scroller">
+      <table>
+        <thead><tr>
+          <th class="tick"></th>
+          <th class="sortable" data-sort="date">Date<span class="arrow">↓</span></th>
+          <th class="sortable" data-sort="project">Project / area<span class="arrow">↓</span></th>
+          <th class="sortable" data-sort="task">Task<span class="arrow">↓</span></th>
+          <th class="sortable" data-sort="assignee">Assigned to<span class="arrow">↓</span></th>
+          <th class="sortable" data-sort="priority">Priority<span class="arrow">↓</span></th>
+          <th class="sortable" data-sort="status">Status<span class="arrow">↓</span></th>
+          <th class="sortable" data-sort="pct">Progress<span class="arrow">↓</span></th>
+          <th class="sortable" data-sort="hours">Hrs<span class="arrow">↓</span></th>
+          <th class="sortable" data-sort="endDate" data-dir="desc">Start → due<span class="arrow">↓</span></th>
+          <th style="text-align:right">Actions</th>
+        </tr></thead>
+        <tbody id="tbody"><tr>
+    <td class="tick"><i style="background:var(--active)"></i></td>
+    <td class="dates">2026-08-20</td>
+    <td>4XM</td>
+    <td><span class="task-t">4XM AC system review workflow</span></td>
+    <td><span class="who"><span class="av sm" style="background:var(--c6)">D</span>
+        <span><span class="nm">Dhanesh</span><small>Electrical Engineering</small></span></span></td>
+    <td><span class="pri p1"><i></i>Medium</span></td>
+    <td><span class="badge t-active">In Progress</span></td>
+    <td><div class="pcell"><div class="track"><i style="width:0%"></i></div><b>0%</b></div></td>
+    <td class="dates">40h</td>
+    <td class="dates ">2026-08-20 → 2026-08-26</td>
+    <td><div class="acts">
+      <button class="btn btn-quiet btn-sm" data-act="edit" data-id="mt0ymm64dag4">Edit</button>
+      <button class="btn btn-quiet btn-sm" data-act="dup" data-id="mt0ymm64dag4" title="Duplicate to today">Copy</button>
+      <button class="btn btn-danger btn-sm" data-act="del" data-id="mt0ymm64dag4">Delete</button>
+    </div></td></tr><tr>
+    <td class="tick"><i style="background:var(--active)"></i></td>
+    <td class="dates">2026-08-20</td>
+    <td>2XM</td>
+    <td><span class="task-t">2XM Anchorage point drawings</span></td>
+    <td><span class="who"><span class="av sm" style="background:var(--c5)">B</span>
+        <span><span class="nm">Basavaraj</span><small>Mechanical Engineering</small></span></span></td>
+    <td><span class="pri p1"><i></i>Medium</span></td>
+    <td><span class="badge t-active">In Progress</span></td>
+    <td><div class="pcell"><div class="track"><i style="width:0%"></i></div><b>0%</b></div></td>
+    <td class="dates">24h</td>
+    <td class="dates ">2026-08-20 → 2026-08-25</td>
+    <td><div class="acts">
+      <button class="btn btn-quiet btn-sm" data-act="edit" data-id="mt0ylkzgsexa">Edit</button>
+      <button class="btn btn-quiet btn-sm" data-act="dup" data-id="mt0ylkzgsexa" title="Duplicate to today">Copy</button>
+      <button class="btn btn-danger btn-sm" data-act="del" data-id="mt0ylkzgsexa">Delete</button>
+    </div></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  Data lives in this browser only. To keep the team in sync, each person sends their <b>Backup</b> file to the project manager, who uses <b>Import → Merge</b> to fold the updates into the master copy.
+</footer>
+
+<!-- task -->
+<div class="overlay" id="mTask">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="taskTitle">
+    <header><div><h2 id="taskTitle">Edit task</h2><p>Fields marked <span class="req">*</span> are required.</p></div>
+      <button class="icon-btn" data-close="mTask" aria-label="Close">✕</button></header>
+    <form id="taskForm" data-id="mt0ylkzgsexa">
+      <div class="body">
+        <div class="formgrid">
+          <div class="field"><label for="tDate">Log date <span class="req">*</span></label><input class="ctl" id="tDate" type="date" required=""></div>
+          <div class="field"><label for="tAssignee">Assign to</label>
+            <select class="ctl" id="tAssignee"><option value="">Unassigned</option><option value="mt00i72wo4v3">Basavaraj — Available (60%)</option><option value="mt00icblf129">Dhanesh — At capacity (100%)</option><option value="mt00ixx1uozd">Lohith — Available (0%)</option><option value="mt00j4tcqbhm">Ravi — Available (0%)</option><option value="mt0xitbya6ck">Amith — Available (0%)</option><option value="mt0xj0q54zyf">Ranjith — Available (0%)</option><option value="mt0xjaouegu8">Bhargav — Available (0%)</option></select>
+            <span class="helper" id="assignHelp" style="color: var(--risk);">Basavaraj is at 60% — this task takes them to 120%.</span></div>
+          <div class="field full"><label for="tTask">Task / activity <span class="req">*</span></label><input class="ctl" id="tTask" required="" placeholder="What needs to be done"></div>
+          <div class="field"><label for="tProject">Project / area</label>
+            <div class="combo"><select class="ctl" id="tProject"><option value="">—</option><option value="4XM">4XM</option><option value="2XM">2XM</option><option value="4XM NC">4XM NC</option><option value="2XM NC">2XM NC</option><option value="Meeting">Meeting</option><option value="Other">Other</option></select><button type="button" class="icon-btn" data-add="projects" title="Add a project">＋</button></div>
+            <div class="inline-add" data-for="projects"><input class="ctl" placeholder="New project name"><button type="button" class="btn btn-quiet btn-sm" data-save="projects">Add</button><button type="button" class="btn btn-quiet btn-sm" data-cancel="projects">Cancel</button></div></div>
+          <div class="field"><label for="tDept">Department</label>
+            <div class="combo"><select class="ctl" id="tDept"><option value="">—</option><option value="Tower Engineering">Tower Engineering</option><option value="Mechanical Engineering">Mechanical Engineering</option><option value="Electrical Engineering">Electrical Engineering</option><option value="Tooling Engineering">Tooling Engineering</option><option value="Blade Engineering">Blade Engineering</option><option value="Documentation">Documentation</option></select><button type="button" class="icon-btn" data-add="departments" title="Add a department">＋</button></div>
+            <div class="inline-add" data-for="departments"><input class="ctl" placeholder="New department"><button type="button" class="btn btn-quiet btn-sm" data-save="departments">Add</button><button type="button" class="btn btn-quiet btn-sm" data-cancel="departments">Cancel</button></div></div>
+          <div class="field"><label for="tPriority">Priority</label>
+            <div class="combo"><select class="ctl" id="tPriority"><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select><button type="button" class="icon-btn" data-add="priorities" title="Add a priority">＋</button></div>
+            <div class="inline-add" data-for="priorities"><input class="ctl" placeholder="New priority"><button type="button" class="btn btn-quiet btn-sm" data-save="priorities">Add</button><button type="button" class="btn btn-quiet btn-sm" data-cancel="priorities">Cancel</button></div></div>
+          <div class="field"><label for="tStatus">Status</label>
+            <div class="combo"><select class="ctl" id="tStatus"><option value="At to start">At to start</option><option value="In Progress">In Progress</option><option value="Review">Review</option><option value="Completed">Completed</option><option value="On Hold">On Hold</option><option value="Cancelled">Cancelled</option></select><button type="button" class="icon-btn" data-add="statuses" title="Add a status">＋</button></div>
+            <div class="inline-add" data-for="statuses"><input class="ctl" placeholder="New status"><button type="button" class="btn btn-quiet btn-sm" data-save="statuses">Add</button><button type="button" class="btn btn-quiet btn-sm" data-cancel="statuses">Cancel</button></div></div>
+          <div class="field"><label for="tStart">Start date</label><input class="ctl" id="tStart" type="date"></div>
+          <div class="field"><label for="tEnd">Due date</label><input class="ctl" id="tEnd" type="date"></div>
+          <div class="field"><label for="tPct">Complete (%)</label><input class="ctl" id="tPct" type="number" min="0" max="100" step="5" value="0"></div>
+          <div class="field"><label for="tHours">Estimated effort (hours)</label><input class="ctl" id="tHours" type="number" min="0" max="400" step="1" value="4">
+            <span class="helper">Drives the capacity bars.</span></div>
+          <div class="field full"><label for="tNote">Notes</label><textarea class="ctl" id="tNote" placeholder="Blockers, references, follow-ups"></textarea></div>
+        </div>
+      </div>
+      <footer><span class="left" id="draftNote">Editing an existing task.</span>
+        <button type="button" class="btn btn-quiet" data-close="mTask">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="saveBtn">Save changes</button></footer>
+    </form>
+  </div>
+</div>
+
+<!-- team manager -->
+<div class="overlay" id="mTeam">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="teamTitle">
+    <header><div><h2 id="teamTitle">Team members</h2><p>Add people, set weekly capacity and mark who is away.</p></div>
+      <button class="icon-btn" data-close="mTeam" aria-label="Close">✕</button></header>
+    <div class="body">
+      <p class="hint">Capacity is hours per week. Availability is worked out from open tasks assigned to each person — set someone to <b>On leave</b> to take them out of the assignment list.</p>
+      <div class="items" id="teamItems"><div class="item">
+      <span class="av sm" style="background:var(--c5)">B</span>
+      <input class="name" data-mi="0" data-f="name" value="Basavaraj" aria-label="Member name">
+      <input class="mini-ctl" style="width:120px" data-mi="0" data-f="role" value="" placeholder="Role">
+      <select class="mini-ctl" data-mi="0" data-f="department"><option value="">Dept…</option><option>Engineering</option><option>Design</option><option>Teamcenter</option><option>IT</option><option>Quality</option><option>Project Management</option></select>
+      <input class="mini-ctl" type="number" min="1" max="80" data-mi="0" data-f="capacity" value="40" title="Hours per week">
+      <label class="cap" style="display:flex;align-items:center;gap:5px"><input type="checkbox" data-mi="0" data-f="away"> On leave</label>
+      <span class="av-badge a-full">100%</span>
+      <button class="icon-btn rm" data-rmm="0" title="Remove">✕</button>
+    </div><div class="item">
+      <span class="av sm" style="background:var(--c6)">D</span>
+      <input class="name" data-mi="1" data-f="name" value="Dhanesh" aria-label="Member name">
+      <input class="mini-ctl" style="width:120px" data-mi="1" data-f="role" value="" placeholder="Role">
+      <select class="mini-ctl" data-mi="1" data-f="department"><option value="">Dept…</option><option>Engineering</option><option>Design</option><option>Teamcenter</option><option>IT</option><option>Quality</option><option>Project Management</option></select>
+      <input class="mini-ctl" type="number" min="1" max="80" data-mi="1" data-f="capacity" value="40" title="Hours per week">
+      <label class="cap" style="display:flex;align-items:center;gap:5px"><input type="checkbox" data-mi="1" data-f="away"> On leave</label>
+      <span class="av-badge a-free">20%</span>
+      <button class="icon-btn rm" data-rmm="1" title="Remove">✕</button>
+    </div><div class="item">
+      <span class="av sm" style="background:var(--c4)">L</span>
+      <input class="name" data-mi="2" data-f="name" value="Lohith" aria-label="Member name">
+      <input class="mini-ctl" style="width:120px" data-mi="2" data-f="role" value="" placeholder="Role">
+      <select class="mini-ctl" data-mi="2" data-f="department"><option value="">Dept…</option><option>Engineering</option><option>Design</option><option>Teamcenter</option><option>IT</option><option>Quality</option><option>Project Management</option></select>
+      <input class="mini-ctl" type="number" min="1" max="80" data-mi="2" data-f="capacity" value="40" title="Hours per week">
+      <label class="cap" style="display:flex;align-items:center;gap:5px"><input type="checkbox" data-mi="2" data-f="away"> On leave</label>
+      <span class="av-badge a-full">100%</span>
+      <button class="icon-btn rm" data-rmm="2" title="Remove">✕</button>
+    </div><div class="item">
+      <span class="av sm" style="background:var(--c7)">R</span>
+      <input class="name" data-mi="3" data-f="name" value="Ravi" aria-label="Member name">
+      <input class="mini-ctl" style="width:120px" data-mi="3" data-f="role" value="" placeholder="Role">
+      <select class="mini-ctl" data-mi="3" data-f="department"><option value="">Dept…</option><option>Engineering</option><option>Design</option><option>Teamcenter</option><option>IT</option><option>Quality</option><option>Project Management</option></select>
+      <input class="mini-ctl" type="number" min="1" max="80" data-mi="3" data-f="capacity" value="40" title="Hours per week">
+      <label class="cap" style="display:flex;align-items:center;gap:5px"><input type="checkbox" data-mi="3" data-f="away"> On leave</label>
+      <span class="av-badge a-free">0%</span>
+      <button class="icon-btn rm" data-rmm="3" title="Remove">✕</button>
+    </div><div class="item">
+      <span class="av sm" style="background:var(--c7)">A</span>
+      <input class="name" data-mi="4" data-f="name" value="Amith" aria-label="Member name">
+      <input class="mini-ctl" style="width:120px" data-mi="4" data-f="role" value="" placeholder="Role">
+      <select class="mini-ctl" data-mi="4" data-f="department"><option value="">Dept…</option><option>Engineering</option><option>Design</option><option>Teamcenter</option><option>IT</option><option>Quality</option><option>Project Management</option></select>
+      <input class="mini-ctl" type="number" min="1" max="80" data-mi="4" data-f="capacity" value="40" title="Hours per week">
+      <label class="cap" style="display:flex;align-items:center;gap:5px"><input type="checkbox" data-mi="4" data-f="away"> On leave</label>
+      <span class="av-badge a-free">0%</span>
+      <button class="icon-btn rm" data-rmm="4" title="Remove">✕</button>
+    </div><div class="item">
+      <span class="av sm" style="background:var(--c5)">R</span>
+      <input class="name" data-mi="5" data-f="name" value="Ranjith" aria-label="Member name">
+      <input class="mini-ctl" style="width:120px" data-mi="5" data-f="role" value="" placeholder="Role">
+      <select class="mini-ctl" data-mi="5" data-f="department"><option value="">Dept…</option><option>Engineering</option><option>Design</option><option>Teamcenter</option><option>IT</option><option>Quality</option><option>Project Management</option></select>
+      <input class="mini-ctl" type="number" min="1" max="80" data-mi="5" data-f="capacity" value="40" title="Hours per week">
+      <label class="cap" style="display:flex;align-items:center;gap:5px"><input type="checkbox" data-mi="5" data-f="away"> On leave</label>
+      <span class="av-badge a-free">0%</span>
+      <button class="icon-btn rm" data-rmm="5" title="Remove">✕</button>
+    </div><div class="item">
+      <span class="av sm" style="background:var(--c2)">B</span>
+      <input class="name" data-mi="6" data-f="name" value="Bhargav" aria-label="Member name">
+      <input class="mini-ctl" style="width:120px" data-mi="6" data-f="role" value="" placeholder="Role">
+      <select class="mini-ctl" data-mi="6" data-f="department"><option value="">Dept…</option><option>Engineering</option><option>Design</option><option>Teamcenter</option><option>IT</option><option>Quality</option><option>Project Management</option></select>
+      <input class="mini-ctl" type="number" min="1" max="80" data-mi="6" data-f="capacity" value="40" title="Hours per week">
+      <label class="cap" style="display:flex;align-items:center;gap:5px"><input type="checkbox" data-mi="6" data-f="away"> On leave</label>
+      <span class="av-badge a-free">0%</span>
+      <button class="icon-btn rm" data-rmm="6" title="Remove">✕</button>
+    </div></div>
+      <div class="addbar">
+        <input class="ctl" id="newMember" placeholder="Full name">
+        <input class="ctl" id="newRole" placeholder="Role (optional)">
+        <button class="btn btn-primary" id="addMember">Add member</button>
+      </div>
+    </div>
+    <footer><span class="left">Renaming a person updates every task assigned to them.</span>
+      <button class="btn btn-primary" data-close="mTeam">Done</button></footer>
+  </div>
+</div>
+
+<!-- lists -->
+<div class="overlay" id="mLists">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="listTitle">
+    <header><div><h2 id="listTitle">Manage dropdown lists</h2><p>Add, rename, reorder or remove the options behind every dropdown.</p></div>
+      <button class="icon-btn" data-close="mLists" aria-label="Close">✕</button></header>
+    <div class="tabs" id="listTabs" role="tablist"><button role="tab" data-tab="projects" aria-selected="false">Projects / areas<span>6</span></button><button role="tab" data-tab="statuses" aria-selected="false">Statuses<span>6</span></button><button role="tab" data-tab="priorities" aria-selected="false">Priorities<span>3</span></button><button role="tab" data-tab="departments" aria-selected="true">Departments<span>6</span></button></div>
+    <div class="body">
+      <p class="hint" id="listHint">Shown in the department filter and the task form.</p>
+      <div class="items" id="listItems"><div class="item"><span class="ord">1</span>
+      <input class="name" data-i="0" value="Tower Engineering" aria-label="Option name">
+      <span class="used">1 use</span>
+      <button class="icon-btn" data-move="-1" data-i="0" disabled="" title="Move up">↑</button>
+      <button class="icon-btn" data-move="1" data-i="0" title="Move down">↓</button>
+      <button class="icon-btn rm" data-rm="0" title="Remove">✕</button></div><div class="item"><span class="ord">2</span>
+      <input class="name" data-i="1" value="Mechanical Engineering" aria-label="Option name">
+      <span class="used">0 uses</span>
+      <button class="icon-btn" data-move="-1" data-i="1" title="Move up">↑</button>
+      <button class="icon-btn" data-move="1" data-i="1" title="Move down">↓</button>
+      <button class="icon-btn rm" data-rm="1" title="Remove">✕</button></div><div class="item"><span class="ord">3</span>
+      <input class="name" data-i="2" value="Electrical Engineering" aria-label="Option name">
+      <span class="used">0 uses</span>
+      <button class="icon-btn" data-move="-1" data-i="2" title="Move up">↑</button>
+      <button class="icon-btn" data-move="1" data-i="2" title="Move down">↓</button>
+      <button class="icon-btn rm" data-rm="2" title="Remove">✕</button></div><div class="item"><span class="ord">4</span>
+      <input class="name" data-i="3" value="Tooling Engineering" aria-label="Option name">
+      <span class="used">0 uses</span>
+      <button class="icon-btn" data-move="-1" data-i="3" title="Move up">↑</button>
+      <button class="icon-btn" data-move="1" data-i="3" title="Move down">↓</button>
+      <button class="icon-btn rm" data-rm="3" title="Remove">✕</button></div><div class="item"><span class="ord">5</span>
+      <input class="name" data-i="4" value="Blade Engineering" aria-label="Option name">
+      <span class="used">0 uses</span>
+      <button class="icon-btn" data-move="-1" data-i="4" title="Move up">↑</button>
+      <button class="icon-btn" data-move="1" data-i="4" title="Move down">↓</button>
+      <button class="icon-btn rm" data-rm="4" title="Remove">✕</button></div><div class="item"><span class="ord">6</span>
+      <input class="name" data-i="5" value="Documentation" aria-label="Option name">
+      <span class="used">0 uses</span>
+      <button class="icon-btn" data-move="-1" data-i="5" title="Move up">↑</button>
+      <button class="icon-btn" data-move="1" data-i="5" disabled="" title="Move down">↓</button>
+      <button class="icon-btn rm" data-rm="5" title="Remove">✕</button></div></div>
+      <div class="addbar"><input class="ctl" id="newItem" placeholder="Add a new department"><button class="btn btn-primary" id="addItem">Add to list</button></div>
+    </div>
+    <footer><span class="left">Renaming an option updates every task that uses it.</span>
+      <button class="btn btn-quiet" id="restoreDefaults">Restore defaults</button>
+      <button class="btn btn-primary" data-close="mLists">Done</button></footer>
+  </div>
+</div>
+
+<!-- confirm -->
+<div class="overlay" id="mConfirm">
+  <div class="sheet narrow" role="alertdialog" aria-modal="true" aria-labelledby="cTitle">
+    <header><div><h2 id="cTitle">Delete this task?</h2></div></header>
+    <div class="body"><p id="cBody" style="margin:0;color:var(--ink-2)">“dfds” will be removed permanently.</p></div>
+    <footer><button class="btn btn-quiet" id="cNo">Cancel</button>
+      <button class="btn btn-quiet" id="cAlt" hidden=""></button>
+      <button class="btn btn-danger" id="cYes">Delete</button></footer>
+  </div>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="filePick" accept="application/json" hidden="">
+
+<!-- Online sync: Firebase Realtime Database + Anonymous Authentication.
+     1) Create a Firebase project.
+     2) Enable Authentication > Anonymous.
+     3) Create Realtime Database.
+     4) Replace the values in FIREBASE_CONFIG below with your Firebase web-app config.
+     5) Deploy this HTML to any static host (Firebase Hosting, GitHub Pages, Netlify, etc.).
+     The app keeps localStorage as an offline fallback. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script>
+window.TTT_FIREBASE_CONFIG = {
+  apiKey: "PASTE_YOUR_FIREBASE_API_KEY",
+  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://PASTE_YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "PASTE_YOUR_PROJECT",
+  storageBucket: "PASTE_YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID",
+  appId: "PASTE_YOUR_FIREBASE_APP_ID"
+};
+window.TTT_SHARED_PATH = "teamTaskTracker/shared";
+</script>
+
+<script>
+(function(){
+"use strict";
+const KEY="ttt.v1", OLD3="dtt.v3", LEGACY="dailyTaskTrackerV2", DRAFT="ttt.draft", VIEW="ttt.viewer";
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today=()=>new Date().toLocaleDateString("en-CA");
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,Number(n)||0));
+
+const TONES=[["done","Completed"],["active","In progress"],["idle","Waiting"],["risk","At risk"],["off","Closed / n-a"]];
+const PALETTE=["--c1","--c2","--c3","--c4","--c5","--c6","--c7","--c8"];
+const DEFAULTS={
+  projects:["Teamcenter Support","Drawing Compare Tool","Website Development","Documentation","Meeting","Other"],
+  departments:["Engineering","Design","Teamcenter","IT","Quality","Project Management"],
+  priorities:["High","Medium","Low"],
+  statuses:[{name:"Completed",tone:"done"},{name:"In Progress",tone:"active"},{name:"Pending",tone:"idle"},
+            {name:"Blocked",tone:"risk"},{name:"On Hold",tone:"idle"},{name:"Cancelled",tone:"off"}]
+};
+const META={
+  projects:{label:"Projects / areas",hint:"Shown in the project filter, the pie chart and the task form.",field:"project"},
+  statuses:{label:"Statuses",hint:"Each status maps to a roll-up type, which drives its colour and the workload counts.",field:"status"},
+  priorities:{label:"Priorities",hint:"Order matters: the first item is the highest priority and is counted in “High priority open”.",field:"priority"},
+  departments:{label:"Departments",hint:"Shown in the department filter and the task form.",field:"department"}
+};
+let db={tasks:[],members:[],lists:JSON.parse(JSON.stringify(DEFAULTS))};
+let sort={key:"date",dir:-1}, activeTab="projects", viewer="";
+let online={enabled:false,ready:false,writing:false,ref:null,auth:null};
+
+/* applied filter state — the board reads this, not the controls, so nothing
+   changes until "Run filters" is pressed */
+const F={scope:"all",date:"",member:"",project:"",status:"",dept:"",search:""};
+let avQuery=null, loadQuery=null, planTab="avail";
+
+/* ---------- storage ---------- */
+function migrateTask(t){
+  return {id:t.id||uid(),date:t.date||today(),project:t.project||"",task:t.task||"",priority:t.priority||"Medium",
+    status:t.status||"Pending",startDate:t.startDate||"",endDate:t.endDate||"",pct:clamp(t.pct,0,100),
+    department:t.department||"",note:t.note||"",assignee:t.assignee||"",hours:t.hours==null?4:clamp(t.hours,0,400),
+    assignedBy:t.assignedBy||"",updated:t.updated||Date.now()};
+}
+function load(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw){
+      const d=JSON.parse(raw);
+      db.tasks=(d.tasks||[]).map(migrateTask);
+      db.members=Array.isArray(d.members)?d.members:[];
+      for(const k in DEFAULTS) if(Array.isArray(d.lists?.[k])&&d.lists[k].length) db.lists[k]=d.lists[k];
+      return;
+    }
+    const prev=JSON.parse(localStorage.getItem(OLD3)||"null");
+    if(prev&&Array.isArray(prev.tasks)){
+      db.tasks=prev.tasks.map(migrateTask);
+      for(const k in DEFAULTS) if(Array.isArray(prev.lists?.[k])&&prev.lists[k].length) db.lists[k]=prev.lists[k];
+      save(); toast(db.tasks.length+" tasks carried over from your personal tracker"); return;
+    }
+    const old=JSON.parse(localStorage.getItem(LEGACY)||"[]");
+    if(Array.isArray(old)&&old.length){
+      db.tasks=old.map(migrateTask);
+      db.tasks.forEach(t=>{
+        if(t.project&&!db.lists.projects.includes(t.project)) db.lists.projects.push(t.project);
+        if(t.department&&!db.lists.departments.includes(t.department)) db.lists.departments.push(t.department);
+        if(t.status&&!db.lists.statuses.some(s=>s.name===t.status)) db.lists.statuses.push({name:t.status,tone:"idle"});
+      });
+      save(); toast(db.tasks.length+" tasks carried over from your earlier tracker");
+    }
+  }catch(e){ toast("Could not read saved data; starting fresh",true); }
+}
+function save(){
+  try{
+    localStorage.setItem(KEY,JSON.stringify(db));
+    $("stamp").textContent=(online.ready?"online · ":"saved ")+new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+    if(online.ready && !online.writing && online.ref){
+      online.writing=true;
+      online.ref.set(JSON.parse(JSON.stringify(db))).then(()=>{
+        online.writing=false;
+        $("stamp").textContent="live · saved "+new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+      }).catch(err=>{
+        online.writing=false;
+        console.error(err);
+        toast("Online save failed; local copy is safe.",true);
+      });
+    }
+  }catch(e){ toast("Storage is full or blocked — export a backup",true); }
+}
+function onlineConfigured(){
+  const c=window.TTT_FIREBASE_CONFIG||{};
+  return !!(window.firebase && c.apiKey && !String(c.apiKey).startsWith("PASTE_") &&
+    c.authDomain && c.projectId && c.databaseURL && c.appId);
+}
+function setOnlineStamp(msg){
+  const el=$("stamp");
+  if(el) el.textContent=msg;
+}
+function startOnlineSync(){
+  if(!onlineConfigured()){
+    setOnlineStamp("offline mode · configure Firebase for live sync");
+    return;
+  }
+  try{
+    const app=firebase.apps.length?firebase.app():firebase.initializeApp(window.TTT_FIREBASE_CONFIG);
+    online.auth=firebase.auth();
+    online.ref=firebase.database().ref(window.TTT_SHARED_PATH||"teamTaskTracker/shared");
+    online.enabled=true;
+    setOnlineStamp("connecting to shared workspace…");
+    online.auth.signInAnonymously().then(()=>{
+      online.auth.onAuthStateChanged(user=>{
+        if(!user) return;
+        online.ref.on("value",snap=>{
+          const remote=snap.val();
+          if(remote && remote.tasks){
+            online.writing=true;
+            db={
+              tasks:Array.isArray(remote.tasks)?remote.tasks.map(migrateTask):[],
+              members:Array.isArray(remote.members)?remote.members:[],
+              lists:remote.lists||JSON.parse(JSON.stringify(DEFAULTS))
+            };
+            try{localStorage.setItem(KEY,JSON.stringify(db));}catch(e){}
+            online.ready=true;
+            online.writing=false;
+            syncSelects();
+            render();
+            setOnlineStamp("live · synced "+new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));
+          }else if(!online.ready){
+            online.ready=true;
+            save();
+            setOnlineStamp("live · shared workspace created");
+          }
+        },err=>{
+          console.error(err);
+          setOnlineStamp("online connection error · using local copy");
+          toast("Could not read the shared workspace. Check Firebase rules.",true);
+        });
+      });
+    }).catch(err=>{
+      console.error(err);
+      setOnlineStamp("online sign-in failed · using local copy");
+      toast("Firebase sign-in failed. Check Anonymous Authentication.",true);
+    });
+  }catch(err){
+    console.error(err);
+    setOnlineStamp("online setup error · using local copy");
+  }
+}
+function toast(msg,bad){
+  const el=document.createElement("div"); el.className="toast"+(bad?" bad":""); el.textContent=msg;
+  $("toast").appendChild(el); setTimeout(()=>el.remove(),3400);
+}
+
+/* ---------- helpers ---------- */
+const names=k=>k==="statuses"?db.lists.statuses.map(s=>s.name):db.lists[k];
+const toneOf=n=>(db.lists.statuses.find(s=>s.name===n)||{}).tone||"off";
+const priRank=n=>{const i=db.lists.priorities.indexOf(n);return i<0?99:i};
+const isOpen=t=>{const x=toneOf(t.status);return x!=="done"&&x!=="off"};
+const member=id=>db.members.find(m=>m.id===id);
+const initials=n=>String(n||"?").trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+function hue(id){let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))>>>0;return PALETTE[h%PALETTE.length]}
+function usage(k,v){const f=META[k].field;return db.tasks.filter(t=>t[f]===v).length}
+function fillSelect(el,list,all,cur){
+  el.innerHTML=(all?`<option value="">${esc(all)}</option>`:"")+list.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
+  if(cur!=null){ if(cur&&!list.includes(cur)) el.insertAdjacentHTML("beforeend",`<option value="${esc(cur)}">${esc(cur)}</option>`); el.value=cur; }
+}
+function weekStart(d){const x=new Date(d+"T00:00");x.setDate(x.getDate()-((x.getDay()+6)%7));return x.toLocaleDateString("en-CA")}
+function addDays(iso,n){const x=new Date(iso+"T00:00");x.setDate(x.getDate()+n);return x.toLocaleDateString("en-CA")}
+function isLate(t){return !!t.endDate&&t.endDate<today()&&isOpen(t)}
+
+/* capacity from every open task, not just the filtered view */
+function loadOf(id){return db.tasks.filter(t=>t.assignee===id&&isOpen(t)).reduce((s,t)=>s+Number(t.hours||0)*(1-clamp(t.pct,0,100)/100),0)}
+function availability(m){
+  if(m.away) return {key:"off",label:"On leave",pct:0};
+  const cap=Number(m.capacity||40), used=loadOf(m.id), pct=cap?Math.round(used/cap*100):0;
+  if(pct>=100) return {key:"full",label:"At capacity",pct};
+  if(pct>=70) return {key:"tight",label:"Nearly full",pct};
+  return {key:"free",label:"Available",pct};
+}
+const AVCLASS={free:"a-free",tight:"a-tight",full:"a-full",off:"a-off"};
+const AVCOLOR={free:"var(--done)",tight:"var(--idle)",full:"var(--risk)",off:"var(--off)"};
+
+/* ---------- filtering ---------- */
+function pullFilters(){
+  F.scope=$("fScope").value; F.date=$("fDate").value; F.member=$("fMember").value;
+  F.project=$("fProject").value; F.status=$("fStatus").value; F.dept=$("fDept").value;
+  F.search=$("fSearch").value.trim().toLowerCase();
+}
+function markPending(on){
+  $("btnApply").classList.toggle("pending",on);
+  $("filterState").textContent=on?"filters changed — press Run filters":"";
+}
+function applyFilters(){ pullFilters(); markPending(false); render(); }
+function inScope(t){
+  const scope=F.scope,d=F.date;
+  if(scope==="all"||!d) return true;
+  if(scope==="day") return t.date===d;
+  if(scope==="week"){const s=weekStart(d);return t.date>=s&&t.date<=addDays(s,6)}
+  return (t.date||"").slice(0,7)===d.slice(0,7);
+}
+function visible(){
+  const p=F.project,s=F.status,dp=F.dept,mb=F.member,q=F.search;
+  return db.tasks.filter(t=>inScope(t)&&(!p||t.project===p)&&(!s||t.status===s)&&(!dp||t.department===dp)&&
+    (!mb||(mb==="__none"?!t.assignee:t.assignee===mb))&&
+    (!q||[t.task,t.note,t.project,t.department].some(x=>String(x||"").toLowerCase().includes(q))));
+}
+
+/* ---------- charts ---------- */
+function donutChart(svg,segs,centre,label){
+  const R=58,S=20,C=2*Math.PI*R,total=segs.reduce((s,x)=>s+x.n,0);
+  if(!total){ svg.innerHTML=`<circle cx="75" cy="75" r="${R}" fill="none" stroke="#dce2e8" stroke-width="${S}" stroke-dasharray="4 6"/>`; return; }
+  let off=0;
+  const parts=segs.map(s=>{
+    const len=s.n/total*C;
+    const el=`<circle class="slice" cx="75" cy="75" r="${R}" fill="none" stroke="${s.color}" stroke-width="${S}"
+      stroke-dasharray="${len.toFixed(2)} ${(C-len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"
+      data-key="${esc(s.key)}" data-kind="${esc(s.kind)}"><title>${esc(s.name)}: ${s.n} (${Math.round(s.n/total*100)}%)</title></circle>`;
+    off+=len; return el;
+  }).join("");
+  svg.innerHTML=`<g transform="rotate(-90 75 75)">${parts}</g>
+    <text class="hole" x="75" y="72" text-anchor="middle"><tspan font-family="var(--mono)" font-size="24" font-weight="650" fill="#101820">${esc(centre)}</tspan></text>
+    <text x="75" y="88" text-anchor="middle" font-size="9" fill="#6c7885" letter-spacing="1.2">${esc(label)}</text>`;
+}
+function pieChart(svg,segs){
+  const R=64,total=segs.reduce((s,x)=>s+x.n,0);
+  if(!total){ svg.innerHTML=`<circle cx="75" cy="75" r="${R}" fill="none" stroke="#dce2e8" stroke-width="2" stroke-dasharray="4 6"/>`; return; }
+  if(segs.length===1){
+    svg.innerHTML=`<circle class="slice" cx="75" cy="75" r="${R}" fill="${segs[0].color}" data-key="${esc(segs[0].key)}" data-kind="${esc(segs[0].kind)}"><title>${esc(segs[0].name)}: ${segs[0].n}</title></circle>`; return;
+  }
+  let a0=-Math.PI/2;
+  svg.innerHTML=segs.map(s=>{
+    const a1=a0+s.n/total*2*Math.PI;
+    const x0=75+R*Math.cos(a0),y0=75+R*Math.sin(a0),x1=75+R*Math.cos(a1),y1=75+R*Math.sin(a1);
+    const big=(a1-a0)>Math.PI?1:0;
+    const d=`M75,75 L${x0.toFixed(2)},${y0.toFixed(2)} A${R},${R} 0 ${big} 1 ${x1.toFixed(2)},${y1.toFixed(2)} Z`;
+    a0=a1;
+    return `<path class="slice" d="${d}" fill="${s.color}" stroke="#fff" stroke-width="1.5" data-key="${esc(s.key)}" data-kind="${esc(s.kind)}"><title>${esc(s.name)}: ${s.n} (${Math.round(s.n/total*100)}%)</title></path>`;
+  }).join("");
+}
+function keys(el,segs,kind,activeVal){
+  el.innerHTML=segs.length?segs.map(s=>
+    `<button class="key" data-key="${esc(s.key)}" data-kind="${kind}" aria-pressed="${activeVal===s.key}">
+      <i style="background:${s.color}"></i><span class="nm">${esc(s.name)}</span><span class="vl">${s.n} · ${s.pct}%</span></button>`).join("")
+    :`<div class="nodata">Nothing to chart in this view.</div>`;
+}
+
+/* ---------- render ---------- */
+function render(){
+  const a=visible(),tot=a.length;
+  const by=t=>a.filter(x=>toneOf(x.status)===t).length;
+  $("kTotal").textContent=tot; $("kDone").textContent=by("done");
+  $("kActive").textContent=by("active"); $("kRisk").textContent=by("risk");
+  const avg=tot?Math.round(a.reduce((s,t)=>s+clamp(t.pct,0,100),0)/tot):0;
+  $("kAvg").textContent=avg+"%"; $("barAvg").style.width=avg+"%";
+  const topPri=db.lists.priorities[0];
+  $("kHigh").textContent=a.filter(t=>t.priority===topPri&&isOpen(t)).length;
+  $("kLate").textContent=a.filter(isLate).length;
+  $("kUn").textContent=a.filter(t=>!t.assignee).length;
+  $("kPeople").textContent=new Set(a.map(t=>t.assignee).filter(Boolean)).size;
+  const rate=tot?Math.round(by("done")/tot*100):0;
+  $("rateNote").textContent=rate+"% of tasks closed";
+  const sc=F.scope,d=F.date||today();
+  $("scopeNote").textContent=sc==="all"?"all dates":sc==="day"?d:sc==="week"?"week of "+weekStart(d):d.slice(0,7);
+
+  // meter + status donut
+  const seen={};
+  const stSegs=db.lists.statuses.map(s=>{
+    const n=a.filter(t=>t.status===s.name).length;
+    const dup=(seen[s.tone]=(seen[s.tone]||0)+1)>1;
+    return {name:s.name,key:s.name,kind:"status",tone:s.tone,color:`var(--${s.tone})`,n,dup,pct:tot?Math.round(n/tot*100):0};
+  }).filter(s=>s.n);
+  const curStatus=F.status;
+  $("meter").innerHTML=stSegs.length?stSegs.map(s=>
+    `<button style="width:${(s.n/tot*100).toFixed(2)}%;background:var(--${s.tone});${s.dup?"background-image:repeating-linear-gradient(135deg,#ffffff00 0 4px,#ffffff59 4px 8px);":""}"
+      data-key="${esc(s.name)}" data-kind="status" title="${esc(s.name)}: ${s.n}"></button>`).join(""):`<div class="empty"></div>`;
+  $("legend").innerHTML=stSegs.length?stSegs.map(s=>
+    `<button data-key="${esc(s.name)}" data-kind="status" aria-pressed="${curStatus===s.name}"><i style="background:var(--${s.tone})"></i>${esc(s.name)} <span>${s.n}</span></button>`).join("")
+    :`<span style="font-size:12px;color:var(--muted)">Nothing logged in this period yet.</span>`;
+  donutChart($("donut"),stSegs,rate+"%","closed");
+  keys($("donutKeys"),stSegs,"status",curStatus);
+
+  // project pie
+  const projNames=[...new Set(a.map(t=>t.project||"Unassigned project"))];
+  const pSegs=projNames.map((p,i)=>{
+    const n=a.filter(t=>(t.project||"Unassigned project")===p).length;
+    return {name:p,key:p==="Unassigned project"?"":p,kind:"project",color:`var(${PALETTE[i%PALETTE.length]})`,n,pct:tot?Math.round(n/tot*100):0};
+  }).sort((x,y)=>y.n-x.n);
+  pieChart($("pie"),pSegs);
+  keys($("pieKeys"),pSegs,"project",F.project);
+
+  renderCapacity();
+  renderTeam();
+  renderAvail();   // planner stays in step with the live data
+  renderLoad();
+
+  // table
+  const dir=sort.dir;
+  a.sort((x,y)=>{
+    let vx,vy;
+    if(sort.key==="priority"){vx=priRank(x.priority);vy=priRank(y.priority)}
+    else if(sort.key==="pct"||sort.key==="hours"){vx=Number(x[sort.key]||0);vy=Number(y[sort.key]||0)}
+    else if(sort.key==="assignee"){vx=(member(x.assignee)?.name||"zzz").toLowerCase();vy=(member(y.assignee)?.name||"zzz").toLowerCase()}
+    else{vx=String(x[sort.key]??"").toLowerCase();vy=String(y[sort.key]??"").toLowerCase()}
+    return vx<vy?-dir:vx>vy?dir:0;
+  });
+  document.querySelectorAll("th.sortable").forEach(th=>{
+    if(th.dataset.sort===sort.key){th.dataset.dir=dir>0?"asc":"desc";th.querySelector(".arrow").textContent=dir>0?"↑":"↓"}
+    else th.removeAttribute("data-dir");
+  });
+  $("count").textContent=tot+" record"+(tot===1?"":"s");
+  $("tbody").innerHTML=tot?a.map(rowHTML).join(""):
+    `<tr><td colspan="11"><div class="empty-state"><b>Nothing to show here</b>No tasks match the current period and filters. Clear the filters, or add a task.</div></td></tr>`;
+}
+function renderCapacity(){
+  if(!db.members.length){ $("loadBars").innerHTML=`<div class="nodata">Add team members to see capacity.</div>`; return; }
+  const rows=db.members.map(m=>({m,used:loadOf(m.id),av:availability(m)}))
+    .sort((x,y)=>y.av.pct-x.av.pct);
+  const maxScale=Math.max(100,...rows.map(r=>r.av.pct));
+  $("loadBars").innerHTML=rows.map(({m,used,av})=>`
+    <div class="lb">
+      <span class="av sm" style="background:var(${hue(m.id)})">${esc(initials(m.name))}</span>
+      <div><div class="who">${esc(m.name)}</div>
+        <div class="bar"><i style="width:${Math.min(100,av.pct/maxScale*100).toFixed(1)}%;background:${AVCOLOR[av.key]}"></i>
+        <span class="cap" style="left:${(100/maxScale*100).toFixed(1)}%"></span></div></div>
+      <span class="val">${used.toFixed(0)}/${m.capacity||40}h</span>
+    </div>`).join("");
+}
+function renderTeam(){
+  const free=db.members.filter(m=>availability(m).key==="free").length;
+  $("teamNote").textContent=db.members.length?`${free} of ${db.members.length} available`:"no members yet";
+  $("teamGrid").innerHTML=db.members.length?db.members.map(m=>{
+    const av=availability(m), open=db.tasks.filter(t=>t.assignee===m.id&&isOpen(t)).length;
+    return `<div class="member">
+      <div class="top"><span class="av" style="background:var(${hue(m.id)})">${esc(initials(m.name))}</span>
+        <div><div class="nm">${esc(m.name)}</div><div class="rl">${esc(m.role||"Team member")}${m.department?" · "+esc(m.department):""}</div></div></div>
+      <div class="track"><i style="width:${Math.min(100,av.pct)}%;background:${AVCOLOR[av.key]}"></i></div>
+      <div class="foot"><span class="cap">${open} open · ${av.pct}% of ${m.capacity||40}h</span>
+        <span class="av-badge ${AVCLASS[av.key]}">${av.label}</span></div>
+      <button class="btn btn-quiet btn-sm" data-assign-to="${m.id}" ${m.away?"disabled":""}>Assign a task</button>
+    </div>`;
+  }).join(""):`<div class="list-empty" style="grid-column:1/-1">No team members yet. Open <b>Team</b> to add the people you assign work to.</div>`;
+
+  const un=db.tasks.filter(t=>!t.assignee&&isOpen(t));
+  $("queue").innerHTML=un.length?`<div class="panel-h" style="margin-bottom:8px"><h2>Waiting for an owner</h2><span class="note">${un.length} task${un.length===1?"":"s"}</span></div>`+
+    un.slice(0,8).map(t=>`<div class="qrow">
+      <span class="t"><b>${esc(t.task)}</b><small>${esc(t.project||"No project")} · due ${esc(t.endDate||"—")}</small></span>
+      <select data-quick="${t.id}"><option value="">Assign to…</option>${db.members.filter(m=>!m.away).map(m=>
+        `<option value="${m.id}">${esc(m.name)} — ${availability(m).label}</option>`).join("")}</select>
+    </div>`).join("")+(un.length>8?`<div class="cap" style="padding-top:8px">+ ${un.length-8} more in the log below</div>`:"")
+    :`<div class="cap">Every open task has an owner.</div>`;
+}
+function rowHTML(t){
+  const tone=toneOf(t.status),pct=clamp(t.pct,0,100),rank=priRank(t.priority),m=member(t.assignee);
+  return `<tr>
+    <td class="tick"><i style="background:var(--${tone})"></i></td>
+    <td class="dates">${esc(t.date||"—")}</td>
+    <td>${esc(t.project||"—")}</td>
+    <td><span class="task-t">${esc(t.task)}</span>${t.note?`<span class="task-n" title="${esc(t.note)}">${esc(t.note)}</span>`:""}</td>
+    <td>${m?`<span class="who"><span class="av sm" style="background:var(${hue(m.id)})">${esc(initials(m.name))}</span>
+        <span><span class="nm">${esc(m.name)}</span><small>${esc(m.role||t.department||"")}</small></span></span>`
+      :`<span class="unassigned">Unassigned</span>`}</td>
+    <td><span class="pri p${Math.min(rank,2)}"><i></i>${esc(t.priority||"—")}</span></td>
+    <td><span class="badge t-${tone}">${esc(t.status||"—")}</span></td>
+    <td><div class="pcell"><div class="track"><i style="width:${pct}%"></i></div><b>${pct}%</b></div></td>
+    <td class="dates">${Number(t.hours||0)}h</td>
+    <td class="dates ${isLate(t)?"late":""}">${esc(t.startDate||"—")} → ${esc(t.endDate||"—")}</td>
+    <td><div class="acts">
+      <button class="btn btn-quiet btn-sm" data-act="edit" data-id="${t.id}">Edit</button>
+      <button class="btn btn-quiet btn-sm" data-act="dup" data-id="${t.id}" title="Duplicate to today">Copy</button>
+      <button class="btn btn-danger btn-sm" data-act="del" data-id="${t.id}">Delete</button>
+    </div></td></tr>`;
+}
+function syncSelects(){
+  const p=$("fProject").value,s=$("fStatus").value,d=$("fDept").value,mb=$("fMember").value;
+  fillSelect($("fProject"),db.lists.projects,"All projects",p);
+  fillSelect($("fStatus"),names("statuses"),"All statuses",s);
+  fillSelect($("fDept"),db.lists.departments,"All departments",d);
+  $("fMember").innerHTML=`<option value="">Whole team</option><option value="__none">Unassigned</option>`+
+    db.members.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join("");
+  $("fMember").value=mb;
+  const v=viewer;
+  $("viewAs").innerHTML=`<option value="">Project manager</option>`+db.members.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join("");
+  $("viewAs").value=v;
+
+  // planner controls
+  fillSelect($("aDept"),db.lists.departments,"Any department",$("aDept").value);
+  fillSelect($("aProject"),db.lists.projects,"Any project",$("aProject").value);
+  fillSelect($("lProject"),db.lists.projects,"All projects",$("lProject").value);
+  fillSelect($("lDept"),db.lists.departments,"All departments",$("lDept").value);
+  const lm=$("lMember").value;
+  $("lMember").innerHTML=`<option value="">Everyone</option>`+
+    db.members.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join("");
+  $("lMember").value=lm;
+}
+
+/* ---------- modals ---------- */
+function open(id){$(id).classList.add("open");const f=$(id).querySelector("input,select,textarea,button");f&&f.focus()}
+function close(id){$(id).classList.remove("open")}
+let cb=null;
+function ask(title,body,yes,alt){
+  $("cTitle").textContent=title;$("cBody").textContent=body;$("cYes").textContent=yes||"Confirm";
+  $("cAlt").hidden=!alt; if(alt)$("cAlt").textContent=alt;
+  open("mConfirm"); return new Promise(r=>{cb=r});
+}
+$("cYes").onclick=()=>{close("mConfirm");cb&&cb("yes")};
+$("cAlt").onclick=()=>{close("mConfirm");cb&&cb("alt")};
+$("cNo").onclick=()=>{close("mConfirm");cb&&cb(false)};
+document.addEventListener("click",e=>{
+  const c=e.target.closest("[data-close]"); if(c) close(c.dataset.close);
+  if(e.target.classList.contains("overlay")&&e.target.id!=="mConfirm") close(e.target.id);
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") document.querySelectorAll(".overlay.open").forEach(o=>o.id==="mConfirm"?$("cNo").click():close(o.id));
+});
+
+/* ---------- task form ---------- */
+function assigneeOptions(cur){
+  const opts=db.members.map(m=>{
+    const av=availability(m);
+    return `<option value="${m.id}" ${m.away&&m.id!==cur?"disabled":""}>${esc(m.name)} — ${av.label}${m.away?"":" ("+av.pct+"%)"}</option>`;
+  }).join("");
+  $("tAssignee").innerHTML=`<option value="">Unassigned</option>`+opts;
+  $("tAssignee").value=cur||"";
+}
+function fillTaskSelects(t){
+  fillSelect($("tProject"),db.lists.projects,"—",t?.project||"");
+  fillSelect($("tPriority"),db.lists.priorities,null,t?.priority||db.lists.priorities[Math.min(1,db.lists.priorities.length-1)]||"");
+  fillSelect($("tStatus"),names("statuses"),null,t?.status||names("statuses")[0]||"");
+  fillSelect($("tDept"),db.lists.departments,"—",t?.department||"");
+  assigneeOptions(t?.assignee||"");
+}
+function openTask(t,preset,presetDate){
+  $("taskTitle").textContent=t?"Edit task":"New task";
+  $("saveBtn").textContent=t?"Save changes":"Add task";
+  $("taskForm").dataset.id=t?.id||"";
+  $("tDate").value=t?.date||presetDate||F.date||today();
+  $("tTask").value=t?.task||""; $("tStart").value=t?.startDate||t?.date||presetDate||"";
+  $("tEnd").value=t?.endDate||""; $("tPct").value=t?.pct??0; $("tNote").value=t?.note||"";
+  $("tHours").value=t?.hours??4;
+  fillTaskSelects(t||{assignee:preset||viewer||""});
+  document.querySelectorAll(".inline-add").forEach(x=>x.classList.remove("on"));
+  if(!t){
+    const raw=localStorage.getItem(DRAFT);
+    if(raw){try{const d=JSON.parse(raw);
+      $("tTask").value=d.task||"";$("tNote").value=d.note||"";$("tPct").value=d.pct??0;$("tHours").value=d.hours??4;
+      if(d.project)$("tProject").value=d.project; if(d.status)$("tStatus").value=d.status;
+      if(d.priority)$("tPriority").value=d.priority; if(d.department)$("tDept").value=d.department;
+      if(d.task)$("draftNote").textContent="Restored your unsaved draft.";
+    }catch(e){}}
+    if(preset)$("tAssignee").value=preset;
+    if(presetDate){
+      $("tDate").value=presetDate; $("tStart").value=presetDate;
+      $("draftNote").textContent=`Planned for ${presetDate}.`;
+    }
+  } else $("draftNote").textContent="Editing an existing task.";
+  updateAssignHelp(); open("mTask"); $("tTask").focus();
+}
+function updateAssignHelp(){
+  const m=member($("tAssignee").value);
+  if(!m){ $("assignHelp").textContent="Leave unassigned to add it to the assignment queue."; return; }
+  const av=availability(m), hrs=Number($("tHours").value||0);
+  const after=Math.round((loadOf(m.id)+hrs)/(m.capacity||40)*100);
+  $("assignHelp").textContent=`${m.name} is at ${av.pct}% — this task takes them to ${after}%.`;
+  $("assignHelp").style.color=after>100?"var(--risk)":"var(--muted)";
+}
+$("tAssignee").addEventListener("change",updateAssignHelp);
+$("tHours").addEventListener("input",updateAssignHelp);
+["tDate","tProject","tTask","tPriority","tStatus","tStart","tEnd","tPct","tDept","tNote","tHours"].forEach(id=>
+  $(id).addEventListener("input",()=>{
+    if($("taskForm").dataset.id) return;
+    localStorage.setItem(DRAFT,JSON.stringify({project:$("tProject").value,task:$("tTask").value,priority:$("tPriority").value,
+      status:$("tStatus").value,pct:$("tPct").value,department:$("tDept").value,note:$("tNote").value,hours:$("tHours").value}));
+    $("draftNote").textContent="Draft saved "+new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+  }));
+$("taskForm").onsubmit=e=>{
+  e.preventDefault();
+  const id=$("taskForm").dataset.id||uid(), i=db.tasks.findIndex(x=>x.id===id);
+  const prev=i>-1?db.tasks[i]:null;
+  const t={id,date:$("tDate").value,project:$("tProject").value,task:$("tTask").value.trim(),
+    priority:$("tPriority").value,status:$("tStatus").value,startDate:$("tStart").value,endDate:$("tEnd").value,
+    pct:clamp($("tPct").value,0,100),department:$("tDept").value,note:$("tNote").value.trim(),
+    assignee:$("tAssignee").value,hours:clamp($("tHours").value,0,400),
+    assignedBy:prev?.assignedBy||"",updated:Date.now()};
+  if(t.endDate&&t.startDate&&t.endDate<t.startDate) return toast("Due date is before the start date",true);
+  if(t.assignee&&t.assignee!==prev?.assignee) t.assignedBy=viewer||"pm";
+  if(i>-1) db.tasks[i]=t; else db.tasks.push(t);
+  localStorage.removeItem(DRAFT); save(); close("mTask"); render();
+  const m=member(t.assignee);
+  toast((i>-1?"Task updated":"Task added")+(m?` · assigned to ${m.name}`:""));
+};
+
+/* inline add of list options */
+document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{
+  const box=document.querySelector(`.inline-add[data-for="${b.dataset.add}"]`);
+  box.classList.add("on"); box.querySelector("input").focus();
+});
+document.querySelectorAll("[data-cancel]").forEach(b=>b.onclick=()=>
+  document.querySelector(`.inline-add[data-for="${b.dataset.cancel}"]`).classList.remove("on"));
+document.querySelectorAll("[data-save]").forEach(b=>b.onclick=()=>{
+  const k=b.dataset.save,box=document.querySelector(`.inline-add[data-for="${k}"]`),inp=box.querySelector("input");
+  const v=inp.value.trim(); if(!addOption(k,v)) return;
+  inp.value=""; box.classList.remove("on");
+  const keep={project:$("tProject").value,priority:$("tPriority").value,status:$("tStatus").value,
+              department:$("tDept").value,assignee:$("tAssignee").value};
+  fillTaskSelects(keep);
+  $({projects:"tProject",priorities:"tPriority",statuses:"tStatus",departments:"tDept"}[k]).value=v;
+  syncSelects(); render(); toast(`Added “${v}”`);
+});
+document.querySelectorAll(".inline-add input").forEach(i=>i.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){e.preventDefault();i.parentElement.querySelector("[data-save]").click()}
+}));
+function addOption(k,v){
+  if(!v){toast("Type a name first",true);return false}
+  if(names(k).some(n=>n.toLowerCase()===v.toLowerCase())){toast("That option already exists",true);return false}
+  if(k==="statuses") db.lists.statuses.push({name:v,tone:"idle"}); else db.lists[k].push(v);
+  save(); return true;
+}
+
+/* ---------- team manager ---------- */
+function renderTeamItems(){
+  $("teamItems").innerHTML=db.members.length?db.members.map((m,i)=>{
+    const av=availability(m);
+    return `<div class="item">
+      <span class="av sm" style="background:var(${hue(m.id)})">${esc(initials(m.name))}</span>
+      <input class="name" data-mi="${i}" data-f="name" value="${esc(m.name)}" aria-label="Member name">
+      <input class="mini-ctl" style="width:120px" data-mi="${i}" data-f="role" value="${esc(m.role||"")}" placeholder="Role">
+      <select class="mini-ctl" data-mi="${i}" data-f="department"><option value="">Dept…</option>${
+        db.lists.departments.map(d=>`<option ${m.department===d?"selected":""}>${esc(d)}</option>`).join("")}</select>
+      <input class="mini-ctl" type="number" min="1" max="80" data-mi="${i}" data-f="capacity" value="${Number(m.capacity||40)}" title="Hours per week">
+      <label class="cap" style="display:flex;align-items:center;gap:5px"><input type="checkbox" data-mi="${i}" data-f="away" ${m.away?"checked":""}> On leave</label>
+      <span class="av-badge ${AVCLASS[av.key]}">${av.pct}%</span>
+      <button class="icon-btn rm" data-rmm="${i}" title="Remove">✕</button>
+    </div>`;
+  }).join(""):`<div class="list-empty">No members yet. Add the first person below.</div>`;
+}
+$("addMember").onclick=()=>{
+  const n=$("newMember").value.trim();
+  if(!n) return toast("Enter a name first",true);
+  if(db.members.some(m=>m.name.toLowerCase()===n.toLowerCase())) return toast("That person is already on the team",true);
+  db.members.push({id:uid(),name:n,role:$("newRole").value.trim(),department:"",capacity:40,away:false});
+  $("newMember").value="";$("newRole").value="";
+  save(); renderTeamItems(); syncSelects(); render(); toast(`${n} added to the team`);
+};
+$("newMember").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("addMember").click()}});
+$("teamItems").addEventListener("change",e=>{
+  const el=e.target.closest("[data-mi]"); if(!el) return;
+  const m=db.members[+el.dataset.mi], f=el.dataset.f;
+  if(f==="away") m.away=el.checked;
+  else if(f==="capacity") m.capacity=clamp(el.value,1,80);
+  else if(f==="name"){
+    const v=el.value.trim();
+    if(!v){el.value=m.name;return toast("A name cannot be empty",true)}
+    m.name=v;
+  } else m[f]=el.value;
+  save(); renderTeamItems(); syncSelects(); render();
+});
+$("teamItems").addEventListener("click",async e=>{
+  const rm=e.target.closest("[data-rmm]"); if(!rm) return;
+  const m=db.members[+rm.dataset.rmm], n=db.tasks.filter(t=>t.assignee===m.id).length;
+  const msg=n?`${n} task${n===1?"":"s"} assigned to ${m.name} will move back to the assignment queue.`
+             :`${m.name} has no tasks assigned.`;
+  if(await ask(`Remove ${m.name}?`,msg,"Remove")!=="yes") return;
+  db.tasks.forEach(t=>{if(t.assignee===m.id)t.assignee=""});
+  db.members=db.members.filter(x=>x.id!==m.id);
+  if(viewer===m.id){viewer="";localStorage.removeItem(VIEW)}
+  save(); renderTeamItems(); syncSelects(); render(); toast(`${m.name} removed`);
+});
+
+/* ---------- list manager ---------- */
+function renderTabs(){
+  $("listTabs").innerHTML=Object.keys(META).map(k=>
+    `<button role="tab" data-tab="${k}" aria-selected="${k===activeTab}">${META[k].label}<span>${names(k).length}</span></button>`).join("");
+}
+function renderList(){
+  const k=activeTab,list=names(k);
+  $("listHint").textContent=META[k].hint;
+  $("newItem").placeholder="Add a new "+META[k].label.replace(/s$/,"").toLowerCase();
+  if(!list.length){$("listItems").innerHTML=`<div class="list-empty">This list is empty. Add an option below so it appears in the dropdown.</div>`;return}
+  $("listItems").innerHTML=list.map((v,i)=>{
+    const used=usage(k,v);
+    const tone=k==="statuses"?`<select class="tone" data-i="${i}">${TONES.map(([t,l])=>`<option value="${t}" ${db.lists.statuses[i].tone===t?"selected":""}>${l}</option>`).join("")}</select>`:"";
+    return `<div class="item"><span class="ord">${i+1}</span>
+      <input class="name" data-i="${i}" value="${esc(v)}" aria-label="Option name">${tone}
+      <span class="used">${used} use${used===1?"":"s"}</span>
+      <button class="icon-btn" data-move="-1" data-i="${i}" ${i===0?"disabled":""} title="Move up">↑</button>
+      <button class="icon-btn" data-move="1" data-i="${i}" ${i===list.length-1?"disabled":""} title="Move down">↓</button>
+      <button class="icon-btn rm" data-rm="${i}" title="Remove">✕</button></div>`;
+  }).join("");
+}
+$("listTabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(!b)return;activeTab=b.dataset.tab;renderTabs();renderList()};
+$("addItem").onclick=()=>{
+  const v=$("newItem").value.trim(); if(!addOption(activeTab,v)) return;
+  $("newItem").value="";renderTabs();renderList();syncSelects();render();toast(`Added “${v}”`);
+};
+$("newItem").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("addItem").click()}});
+$("listItems").addEventListener("click",async e=>{
+  const mv=e.target.closest("[data-move]"),rm=e.target.closest("[data-rm]");
+  const arr=activeTab==="statuses"?db.lists.statuses:db.lists[activeTab];
+  if(mv){const i=+mv.dataset.i,j=i+ +mv.dataset.move;if(j<0||j>=arr.length)return;
+    [arr[i],arr[j]]=[arr[j],arr[i]];save();renderList();syncSelects();render();return}
+  if(rm){
+    const i=+rm.dataset.rm,v=names(activeTab)[i],used=usage(activeTab,v);
+    if(arr.length===1) return toast("Keep at least one option in this list",true);
+    const msg=used?`${used} task${used===1?"":"s"} still use “${v}”. Those tasks keep the value, but it will no longer appear in the dropdown.`
+                  :`“${v}” will be removed from the dropdown. No tasks use it.`;
+    if(await ask("Remove “"+v+"”?",msg,"Remove")!=="yes") return;
+    arr.splice(i,1);save();renderTabs();renderList();syncSelects();render();toast(`Removed “${v}”`);
+  }
+});
+$("listItems").addEventListener("change",e=>{
+  const t=e.target.closest("select.tone"); if(t){db.lists.statuses[+t.dataset.i].tone=t.value;save();render()}
+});
+$("listItems").addEventListener("blur",e=>{
+  const inp=e.target.closest("input.name"); if(!inp) return;
+  const i=+inp.dataset.i,k=activeTab,old=names(k)[i],v=inp.value.trim();
+  if(!v){inp.value=old;return toast("A name cannot be empty",true)}
+  if(v===old) return;
+  if(names(k).some((n,j)=>j!==i&&n.toLowerCase()===v.toLowerCase())){inp.value=old;return toast("That option already exists",true)}
+  if(k==="statuses") db.lists.statuses[i].name=v; else db.lists[k][i]=v;
+  const f=META[k].field; db.tasks.forEach(t=>{if(t[f]===old)t[f]=v});
+  save();renderList();syncSelects();render();toast(`Renamed to “${v}”`);
+},true);
+$("restoreDefaults").onclick=async()=>{
+  if(await ask("Restore default lists?","Every list goes back to the starting options. Tasks are not deleted and keep their current values.","Restore")!=="yes") return;
+  db.lists=JSON.parse(JSON.stringify(DEFAULTS));save();renderTabs();renderList();syncSelects();render();toast("Lists restored to defaults");
+};
+
+/* ---------- interactions ---------- */
+$("tbody").addEventListener("click",async e=>{
+  const b=e.target.closest("[data-act]"); if(!b) return;
+  const t=db.tasks.find(x=>x.id===b.dataset.id); if(!t) return;
+  if(b.dataset.act==="edit") return openTask(t);
+  if(b.dataset.act==="dup"){db.tasks.push({...t,id:uid(),date:today(),pct:0,updated:Date.now()});save();render();return toast("Task copied to today")}
+  if(await ask("Delete this task?",`“${t.task}” will be removed permanently.`,"Delete")==="yes"){
+    db.tasks=db.tasks.filter(x=>x.id!==t.id);save();render();toast("Task deleted");
+  }
+});
+document.querySelectorAll("th.sortable").forEach(th=>th.onclick=()=>{
+  const k=th.dataset.sort;
+  sort=sort.key===k?{key:k,dir:-sort.dir}:{key:k,dir:(k==="date"||k==="pct"||k==="hours")?-1:1};
+  render();
+});
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-kind]"); if(b){
+    const sel=b.dataset.kind==="status"?$("fStatus"):$("fProject");
+    sel.value=sel.value===b.dataset.key?"":b.dataset.key; applyFilters(); return;
+  }
+  const a=e.target.closest("[data-assign-to]");
+  if(a) openTask(null,a.dataset.assignTo,a.dataset.assignDate||"");
+});
+$("queue").addEventListener("change",e=>{
+  const s=e.target.closest("[data-quick]"); if(!s||!s.value) return;
+  const t=db.tasks.find(x=>x.id===s.dataset.quick); if(!t) return;
+  t.assignee=s.value; t.assignedBy=viewer||"pm"; t.updated=Date.now();
+  save(); render(); toast(`“${t.task}” assigned to ${member(s.value).name}`);
+});
+$("viewAs").addEventListener("change",()=>{
+  viewer=$("viewAs").value;
+  viewer?localStorage.setItem(VIEW,viewer):localStorage.removeItem(VIEW);
+  $("fMember").value=viewer||"";
+  applyFilters(); toast(viewer?`Showing ${member(viewer).name}'s board`:"Showing the whole team");
+});
+
+/* ================= planner: availability + workload =================
+   A task's effort is spread evenly across the working days between its start
+   and due date, so "booked on a day" reflects work in flight, not just work
+   that starts that day. Everything below recomputes from db on every render,
+   so a task saved anywhere in the app shows up here immediately. */
+const isWorkday=iso=>{const g=new Date(iso+"T00:00").getDay();return g!==0&&g!==6};
+function workdays(a,b){
+  if(!a||!b||b<a) return 0;
+  let n=0,d=a,guard=0;
+  while(d<=b&&guard++<2000){ if(isWorkday(d)) n++; d=addDays(d,1); }
+  return n;
+}
+const tStart=t=>t.startDate||t.date||"";
+const tEnd=t=>t.endDate||t.startDate||t.date||"";
+const remHours=t=>Number(t.hours||0)*(1-clamp(t.pct,0,100)/100);
+function spansDate(t,d){const s=tStart(t),e=tEnd(t);if(!s&&!e)return false;return (s||e)<=d&&d<=(e||s)}
+function overlapsRange(t,a,b){const s=tStart(t),e=tEnd(t)||tStart(t);if(!s&&!e)return false;return (s||e)<=b&&(e||s)>=a}
+function dailyLoad(t){
+  const s=tStart(t),e=tEnd(t)||s;
+  const days=Math.max(1,workdays(s,e)||1);
+  return remHours(t)/days;
+}
+/* what one person's selected day looks like */
+function dayPlan(m,d){
+  const cap=Number(m.capacity||40)/5;
+  const tasks=db.tasks.filter(t=>t.assignee===m.id&&isOpen(t)&&spansDate(t,d));
+  const booked=tasks.reduce((s,t)=>s+dailyLoad(t),0);
+  const due=tasks.filter(t=>tEnd(t)===d).length;
+  const free=Math.max(0,cap-booked);
+  return {cap,booked,free,due,tasks,pct:cap?Math.round(booked/cap*100):0};
+}
+const worksOn=(id,p)=>db.tasks.some(t=>t.assignee===id&&t.project===p);
+
+/* ---------- availability finder ---------- */
+function runAvail(){
+  const d=$("aDate").value;
+  if(!d) return toast("Pick the date you want to assign work on",true);
+  avQuery={date:d,hours:clamp($("aHours").value,0,400),dept:$("aDept").value,
+    project:$("aProject").value,mode:$("aMode").value,q:$("aSearch").value.trim().toLowerCase()};
+  $("btnFindAvail").classList.remove("pending");
+  renderAvail();
+  const n=$("availOut").querySelectorAll(".avrow").length;
+  toast(n?`${n} ${n===1?"person":"people"} match on ${d}`:"Nobody matches those conditions");
+}
+function renderAvail(){
+  const out=$("availOut"),sum=$("availSum");
+  if(!avQuery){
+    sum.innerHTML="";
+    out.innerHTML=`<div class="pempty">Choose a date and the size of the task, then press <b>Run availability filter</b> to see who has room that day.</div>`;
+    return;
+  }
+  const q=avQuery,d=q.date;
+  let people=db.members.slice();
+  if(q.dept) people=people.filter(m=>m.department===q.dept);
+  if(q.project) people=people.filter(m=>worksOn(m.id,q.project));
+  if(q.q) people=people.filter(m=>(m.name+" "+(m.role||"")).toLowerCase().includes(q.q));
+
+  const rows=people.map(m=>({m,away:!!m.away,p:dayPlan(m,d)}))
+    .filter(r=>{
+      if(q.mode==="all") return true;
+      if(r.away) return false;
+      return q.mode==="fit"?r.p.free>=q.hours:r.p.free>0;
+    })
+    .sort((x,y)=>(x.away-y.away)||(y.p.free-x.p.free)||x.m.name.localeCompare(y.m.name));
+
+  const fit=rows.filter(r=>!r.away&&r.p.free>=q.hours).length;
+  const teamFree=db.members.filter(m=>!m.away&&dayPlan(m,d).free>=q.hours).length;
+  sum.innerHTML=[
+    `<span>Date <b>${esc(d)}</b>${isWorkday(d)?"":` <span class="warn">· weekend</span>`}</span>`,
+    `<span>Task size <b>${q.hours}h</b></span>`,
+    `<span><b>${teamFree}</b> of <b>${db.members.length}</b> in the team can take it that day</span>`,
+    `<span>Matching this filter: <b>${rows.length}</b>${q.mode==="all"?"":` · fits <b>${fit}</b>`}</span>`
+  ].join("");
+
+  if(!db.members.length){ out.innerHTML=`<div class="pempty">Add team members first — open <b>Team</b> in the top bar.</div>`; return; }
+  if(!rows.length){ out.innerHTML=`<div class="pempty">Nobody matches. Try a smaller task size, another department, or set <b>Show</b> to everyone.</div>`; return; }
+
+  out.innerHTML=`<div class="avlist">`+rows.map(({m,away,p})=>{
+    const state=away?"off":p.free<=0?"full":p.free>=q.hours?"free":"tight";
+    const label=away?"On leave":p.free<=0?"No room":p.free>=q.hours?"Can take it":"Partly free";
+    return `<div class="avrow ${state==="full"?"is-full":""} ${away?"is-off":""}">
+      <span class="av" style="background:var(${hue(m.id)})">${esc(initials(m.name))}</span>
+      <div class="avmain">
+        <div class="nm">${esc(m.name)}<small>${esc(m.role||"Team member")}${m.department?" · "+esc(m.department):""}</small></div>
+        <div class="bar"><i style="width:${Math.min(100,p.pct)}%;background:${away?"var(--off)":AVCOLOR[p.free>=q.hours?"free":p.free>0?"tight":"full"]}"></i></div>
+        <span class="cap">${away?"Away — not assignable":
+          `${p.booked.toFixed(1)}h booked of ${p.cap.toFixed(1)}h · ${p.tasks.length} task${p.tasks.length===1?"":"s"} running${p.due?` · ${p.due} due today`:""}`}</span>
+        ${p.tasks.length?`<details class="tdet"><summary>What they are on that day</summary><div class="box"><ul class="tasklist">${
+          p.tasks.map(t=>`<li><span class="dt">${esc(tStart(t))} → ${esc(tEnd(t)||"—")}</span>
+            <span class="tk"><b>${esc(t.task)}</b> · ${esc(t.project||"No project")}</span>
+            <span class="dt">${dailyLoad(t).toFixed(1)}h/day</span></li>`).join("")}</ul></div></details>`:""}
+      </div>
+      <div class="avend">
+        <span class="freeh ${away||p.free<=0?"none":""}">${away?"—":p.free.toFixed(1)+"h free"}</span>
+        <span class="av-badge ${AVCLASS[away?"off":p.free>=q.hours?"free":p.free>0?"tight":"full"]}">${label}</span>
+        <button class="btn btn-quiet btn-sm" data-assign-to="${m.id}" data-assign-date="${esc(d)}" ${away?"disabled":""}>Assign on ${esc(d)}</button>
+      </div>
+    </div>`;
+  }).join("")+`</div>`;
+}
+
+/* ---------- workload from date to date ---------- */
+function runLoad(){
+  const from=$("lFrom").value,to=$("lTo").value;
+  if(!from||!to) return toast("Pick both a from date and a to date",true);
+  if(to<from) return toast("The to date falls before the from date",true);
+  loadQuery={from,to,member:$("lMember").value,project:$("lProject").value,dept:$("lDept").value,incDone:$("lDone").checked};
+  $("btnRunLoad").classList.remove("pending");
+  renderLoad();
+  toast(`Workload report ready · ${from} → ${to}`);
+}
+function loadRows(){
+  const q=loadQuery,{from,to}=q;
+  const wd=workdays(from,to);
+  let people=db.members.slice();
+  if(q.member) people=people.filter(m=>m.id===q.member);
+  if(q.dept) people=people.filter(m=>m.department===q.dept);
+  return people.map(m=>{
+    const tasks=db.tasks.filter(t=>t.assignee===m.id&&overlapsRange(t,from,to)&&
+      (!q.project||t.project===q.project)&&(q.incDone||isOpen(t)))
+      .sort((a,b)=>(tStart(a)>tStart(b)?1:-1));
+    const est=tasks.reduce((s,t)=>s+Number(t.hours||0),0);
+    const rem=tasks.filter(isOpen).reduce((s,t)=>s+remHours(t),0);
+    const cap=Number(m.capacity||40)/5*wd;
+    return {m,tasks,est,rem,cap,wd,
+      done:tasks.filter(t=>toneOf(t.status)==="done").length,
+      late:tasks.filter(isLate).length,
+      pct:cap?Math.round(rem/cap*100):0};
+  }).sort((x,y)=>y.pct-x.pct||y.rem-x.rem);
+}
+function renderLoad(){
+  const out=$("loadOut"),sum=$("loadSum");
+  if(!loadQuery){
+    sum.innerHTML="";
+    out.innerHTML=`<div class="pempty">Pick a <b>from</b> and <b>to</b> date, then press <b>Run workload report</b> to see how loaded each person is across that window.</div>`;
+    return;
+  }
+  const q=loadQuery,rows=loadRows(),wd=workdays(q.from,q.to);
+  const tot=rows.reduce((s,r)=>s+r.tasks.length,0),
+        rem=rows.reduce((s,r)=>s+r.rem,0),
+        cap=rows.reduce((s,r)=>s+r.cap,0),
+        over=rows.filter(r=>r.pct>100).length;
+  const unassigned=db.tasks.filter(t=>!t.assignee&&overlapsRange(t,q.from,q.to)&&
+    (!q.project||t.project===q.project)&&(q.incDone||isOpen(t))).length;
+  sum.innerHTML=[
+    `<span>Window <b>${esc(q.from)} → ${esc(q.to)}</b> · <b>${wd}</b> working day${wd===1?"":"s"}</span>`,
+    `<span>Tasks in window <b>${tot}</b></span>`,
+    `<span>Remaining effort <b>${rem.toFixed(1)}h</b> of <b>${cap.toFixed(0)}h</b> capacity</span>`,
+    over?`<span class="warn">${over} ${over===1?"person is":"people are"} over capacity</span>`:`<span>Nobody over capacity</span>`,
+    unassigned?`<span class="warn">${unassigned} unassigned task${unassigned===1?"":"s"} in this window</span>`:""
+  ].filter(Boolean).join("");
+
+  if(!rows.length){ out.innerHTML=`<div class="pempty">No team member matches those conditions.</div>`; return; }
+  out.innerHTML=`<div class="ptable-wrap"><table class="ptable">
+    <thead><tr><th>Team member</th><th>Tasks</th><th>Est. hrs</th><th>Remaining</th><th>Capacity</th><th style="min-width:150px">Load</th><th>Done</th><th>Late</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr>
+      <td><span class="who"><span class="av sm" style="background:var(${hue(r.m.id)})">${esc(initials(r.m.name))}</span>
+        <span><span class="nm">${esc(r.m.name)}${r.m.away?" · away":""}</span><small>${esc(r.m.role||r.m.department||"")}</small></span></span>
+        ${r.tasks.length?`<details class="tdet"><summary>${r.tasks.length} task${r.tasks.length===1?"":"s"} in this window</summary>
+          <div class="box"><ul class="tasklist">${r.tasks.map(t=>`<li>
+            <span class="dt">${esc(tStart(t)||"—")} → ${esc(tEnd(t)||"—")}</span>
+            <span class="tk"><b>${esc(t.task)}</b> · ${esc(t.project||"No project")}
+              <span class="badge t-${toneOf(t.status)}" style="margin-left:6px">${esc(t.status)}</span></span>
+            <span class="dt">${Number(t.hours||0)}h · ${clamp(t.pct,0,100)}%</span></li>`).join("")}</ul></div></details>`:""}</td>
+      <td class="num">${r.tasks.length}</td>
+      <td class="num">${r.est.toFixed(0)}h</td>
+      <td class="num">${r.rem.toFixed(1)}h</td>
+      <td class="num">${r.cap.toFixed(0)}h</td>
+      <td><div class="mini-bar"><i style="width:${Math.min(100,r.pct)}%;background:${r.pct>100?"var(--risk)":r.pct>=70?"var(--idle)":"var(--done)"}"></i></div>
+        <span class="cap">${r.pct}%</span></td>
+      <td class="num">${r.done}</td>
+      <td class="num ${r.late?"late":""}">${r.late}</td>
+    </tr>`).join("")}</tbody></table></div>`;
+}
+$("planTabs").onclick=e=>{
+  const b=e.target.closest("[data-ptab]"); if(!b) return;
+  planTab=b.dataset.ptab;
+  document.querySelectorAll("#planTabs [data-ptab]").forEach(x=>x.setAttribute("aria-selected",x.dataset.ptab===planTab));
+  $("paneAvail").hidden=planTab!=="avail"; $("paneLoad").hidden=planTab!=="load";
+};
+$("btnFindAvail").onclick=runAvail;
+$("btnClearAvail").onclick=()=>{
+  avQuery=null;$("aDate").value=$("fDate").value||today();$("aHours").value=4;
+  $("aDept").value="";$("aProject").value="";$("aMode").value="fit";$("aSearch").value="";
+  renderAvail();
+};
+$("btnRunLoad").onclick=runLoad;
+$("btnLoadCsv").onclick=()=>{
+  if(!loadQuery) return toast("Run the workload report first",true);
+  const rows=loadRows(); if(!rows.length) return toast("Nothing in this report to export",true);
+  const head=["Team member","Role","Department","From","To","Working days","Tasks","Est. hours","Remaining hours","Capacity hours","Load %","Completed","Late"];
+  const body=rows.map(r=>[r.m.name,r.m.role||"",r.m.department||"",loadQuery.from,loadQuery.to,r.wd,
+    r.tasks.length,r.est.toFixed(1),r.rem.toFixed(1),r.cap.toFixed(1),r.pct,r.done,r.late]);
+  const csv=[head,...body].map(r=>r.map(x=>`"${String(x??"").replaceAll('"','""')}"`).join(",")).join("\r\n");
+  download(`Workload_${loadQuery.from}_to_${loadQuery.to}.csv`,"\ufeff"+csv,"text/csv;charset=utf-8");
+  toast("Workload report exported");
+};
+["aDate","aHours","aDept","aProject","aMode"].forEach(id=>$(id).addEventListener("change",()=>{if(avQuery)$("btnFindAvail").classList.add("pending")}));
+$("aSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();runAvail()}});
+["lFrom","lTo","lMember","lProject","lDept","lDone"].forEach(id=>$(id).addEventListener("change",()=>{if(loadQuery)$("btnRunLoad").classList.add("pending")}));
+
+/* ---------- import / export ---------- */
+function download(name,text,type){
+  const b=new Blob([text],{type}),u=URL.createObjectURL(b),a=document.createElement("a");
+  a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);
+}
+$("btnCsv").onclick=()=>{
+  const a=visible(); if(!a.length) return toast("Nothing to export in this view",true);
+  const head=["Log date","Project / area","Task","Assigned to","Priority","Status","% complete","Est. hours","Start date","Due date","Department","Notes"];
+  const rows=a.map(t=>[t.date,t.project,t.task,member(t.assignee)?.name||"Unassigned",t.priority,t.status,t.pct,t.hours,t.startDate,t.endDate,t.department,t.note]);
+  const csv=[head,...rows].map(r=>r.map(x=>`"${String(x??"").replaceAll('"','""')}"`).join(",")).join("\r\n");
+  download(`Team_Task_Tracker_${today()}.csv`,"\ufeff"+csv,"text/csv;charset=utf-8");
+  toast(a.length+" records exported");
+};
+$("btnBackup").onclick=()=>{
+  download(`Team_Task_Tracker_${(member(viewer)?.name||"master").replace(/\s+/g,"_")}_${today()}.json`,JSON.stringify(db,null,2),"application/json");
+  toast("Backup file created");
+};
+$("btnRestore").onclick=()=>$("filePick").click();
+$("filePick").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=async()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(!Array.isArray(d.tasks)) throw 0;
+      const choice=await ask("Import team data",
+        `This file holds ${d.tasks.length} tasks and ${(d.members||[]).length} members. Merge keeps your data and adds or updates theirs. Replace wipes what is here.`,
+        "Replace everything","Merge");
+      if(!choice) return;
+      if(choice==="yes"){ db.tasks=(d.tasks||[]).map(migrateTask); db.members=d.members||[]; }
+      else{
+        let added=0,upd=0;
+        (d.members||[]).forEach(m=>{ if(!db.members.some(x=>x.id===m.id||x.name.toLowerCase()===String(m.name).toLowerCase())) db.members.push(m); });
+        (d.tasks||[]).map(migrateTask).forEach(t=>{
+          const i=db.tasks.findIndex(x=>x.id===t.id);
+          if(i<0){db.tasks.push(t);added++}
+          else if((t.updated||0)>(db.tasks[i].updated||0)){db.tasks[i]=t;upd++}
+        });
+        toast(`Merged: ${added} new, ${upd} updated`);
+      }
+      for(const k in DEFAULTS){
+        if(!Array.isArray(d.lists?.[k])) continue;
+        if(choice==="yes") db.lists[k]=d.lists[k];
+        else d.lists[k].forEach(v=>{
+          const n=k==="statuses"?v.name:v;
+          if(!names(k).some(x=>x.toLowerCase()===String(n).toLowerCase())) db.lists[k].push(v);
+        });
+      }
+      save(); syncSelects(); render(); if(choice==="yes") toast("Data replaced from file");
+    }catch(err){ toast("That file is not a tracker backup",true); }
+    e.target.value="";
+  };
+  r.readAsText(f);
+};
+
+/* ---------- boot ---------- */
+$("btnNew").onclick=()=>openTask(null);
+$("btnTeam").onclick=()=>{renderTeamItems();open("mTeam")};
+$("btnLists").onclick=()=>{renderTabs();renderList();open("mLists")};
+$("btnReset").onclick=()=>{
+  $("fScope").value="all";$("fDate").value=today();$("fProject").value="";$("fStatus").value="";
+  $("fDept").value="";$("fSearch").value="";$("fMember").value=viewer||"";applyFilters();
+};
+/* filters are held until "Run filters" is pressed */
+$("btnApply").onclick=applyFilters;
+["fScope","fDate","fMember","fProject","fStatus","fDept"].forEach(id=>
+  $(id).addEventListener("change",()=>markPending(true)));
+$("fSearch").addEventListener("input",()=>markPending(true));
+document.querySelector(".filters").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){e.preventDefault();applyFilters()}
+});
+
+load();
+startOnlineSync();
+viewer=localStorage.getItem(VIEW)||"";
+if(viewer&&!member(viewer)) viewer="";
+$("fDate").value=today();
+$("aDate").value=today();
+$("lFrom").value=today();
+$("lTo").value=addDays(today(),6);
+syncSelects();
+if(viewer) $("fMember").value=viewer;
+$("stamp").textContent=db.tasks.length+" tasks · "+db.members.length+" members";
+pullFilters();
+render();
+})();
+</script>
+
+
+
+<script id="online-v2-auth">
+(function(){
+"use strict";
+
+/* Firebase config: replace these placeholders with your Firebase Web App config. */
+window.TEAM_TRACKER_FIREBASE_CONFIG = window.TEAM_TRACKER_FIREBASE_CONFIG || {
+  apiKey: "PASTE_YOUR_API_KEY",
+  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://PASTE_YOUR_PROJECT-default-rtdb.firebaseio.com",
+  projectId: "PASTE_YOUR_PROJECT",
+  storageBucket: "PASTE_YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId: "PASTE_YOUR_SENDER_ID",
+  appId: "PASTE_YOUR_APP_ID"
+};
+
+const state = {mode:"login", user:null, role:"Member", users:[]};
+const $ = id => document.getElementById(id);
+const gate=$("authGate"), form=$("authForm"), msg=$("authMsg");
+
+function setMode(mode){
+  state.mode=mode;
+  $("loginTab").classList.toggle("active",mode==="login");
+  $("registerTab").classList.toggle("active",mode==="register");
+  $("authName").style.display=mode==="register"?"block":"none";
+  $("authName").required=mode==="register";
+  $("authPassword").autocomplete=mode==="register"?"new-password":"current-password";
+  $("authSubmit").textContent=mode==="register"?"Create account":"Sign in";
+  msg.textContent="";
+}
+$("loginTab").onclick=()=>setMode("login");
+$("registerTab").onclick=()=>setMode("register");
+
+function localKey(email){return "team_tracker_user_"+email.trim().toLowerCase();}
+function sessionKey(){return "team_tracker_session_v2";}
+function hash(s){
+  let h=2166136261;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}
+  return (h>>>0).toString(16);
+}
+function getUser(email){try{return JSON.parse(localStorage.getItem(localKey(email))||"null")}catch(e){return null}}
+function putUser(u){localStorage.setItem(localKey(u.email),JSON.stringify(u))}
+function setSession(u){localStorage.setItem(sessionKey(),JSON.stringify({email:u.email,name:u.name,role:u.role}));state.user=u;state.role=u.role||"Member";gate.classList.add("hidden");updatePanel();}
+function clearSession(){localStorage.removeItem(sessionKey());state.user=null;gate.classList.remove("hidden");$("onlineTeamPanel").classList.remove("open");setMode("login");}
+
+function updatePanel(){
+  if(!state.user)return;
+  $("currentUserLine").textContent=state.user.name+" · "+state.user.email+" · "+state.role;
+  $("adminOnlyArea").style.display=state.role==="Admin"?"block":"none";
+  renderUsers();
+}
+function allUsers(){
+  const a=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k && k.indexOf("team_tracker_user_")===0){
+      try{a.push(JSON.parse(localStorage.getItem(k)))}catch(e){}
+    }
+  }
+  return a.sort((x,y)=>x.name.localeCompare(y.name));
+}
+function renderUsers(){
+  if(state.role!=="Admin")return;
+  const users=allUsers();
+  $("teamUsers").innerHTML="<table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead><tbody>"+
+    users.map(u=>"<tr><td>"+esc(u.name)+"</td><td>"+esc(u.email)+"</td><td>"+esc(u.role)+"</td><td>"+(u.email!==state.user.email?'<button class="v2-btn v2-danger" data-remove="'+esc(u.email)+'">Remove</button>':"")+"</td></tr>").join("")+
+    "</tbody></table>";
+  $("teamUsers").querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>{
+    const email=b.dataset.remove; localStorage.removeItem(localKey(email)); renderUsers();
+  });
+}
+function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+form.onsubmit=function(e){
+  e.preventDefault(); msg.textContent="";
+  const email=$("authEmail").value.trim().toLowerCase(), pw=$("authPassword").value;
+  if(!email || pw.length<6){msg.textContent="Enter a valid email and password (6+ characters).";return}
+  if(state.mode==="register"){
+    if(getUser(email)){msg.textContent="An account with this email already exists.";return}
+    const users=allUsers();
+    const role=users.length===0?"Admin":"Member";
+    const u={email,name:$("authName").value.trim()||email.split("@")[0],role,passwordHash:hash(pw)};
+    putUser(u); setSession(u);
+  }else{
+    const u=getUser(email);
+    if(!u || u.passwordHash!==hash(pw)){msg.textContent="Invalid email or password.";return}
+    setSession(u);
+  }
+};
+
+$("logoutBtn").onclick=clearSession;
+$("closeTeamPanel").onclick=()=>$("onlineTeamPanel").classList.remove("open");
+$("addInvite").onclick=function(){
+  const email=$("inviteEmail").value.trim().toLowerCase(), role=$("inviteRole").value;
+  if(!email)return;
+  if(getUser(email)){alert("User already exists.");return}
+  putUser({email,name:email.split("@")[0],role,passwordHash:hash("ChangeMe123")});
+  $("inviteEmail").value=""; renderUsers();
+  alert("Member added. Temporary password: ChangeMe123. Ask the member to sign in and change it in the production authentication provider.");
+};
+
+/* Restore session. */
+try{
+  const s=JSON.parse(localStorage.getItem(sessionKey())||"null");
+  if(s && getUser(s.email)) setSession(getUser(s.email));
+}catch(e){}
+
+/* Add a small floating account button without changing the existing tracker UI. */
+const b=document.createElement("button");
+b.textContent="Account";
+b.className="v2-btn";
+b.style.cssText="position:fixed;right:20px;top:18px;z-index:8000;background:#fff";
+b.onclick=()=>{updatePanel();$("onlineTeamPanel").classList.toggle("open")};
+document.body.appendChild(b);
+
+})();
+</script>
+</body></html>
